@@ -181,7 +181,7 @@ class _ChatPageState extends State<ChatPage> {
                               ],
                             ));
                   },
-                  icon: const Icon(Icons.bookmark_remove_outlined),
+                  icon: const Icon(Icons.logout),
                 ),
               IconButton(
                   onPressed: () {
