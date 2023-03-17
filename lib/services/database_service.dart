@@ -50,12 +50,12 @@ class DatabaseService {
       "instagram": instagram,
       "twitter": twitter,
       "verify": verify,
-      "uid": uid,
       "day": day,
       "month": month,
       "year": year,
       "points": points,
       "ban": ban,
+      "review": [],
     });
   }
 
@@ -102,7 +102,6 @@ class DatabaseService {
       "recentMessage": chatMessageData['message'],
       "recentMessageSender": chatMessageData['sender'],
       "recentMessageTime": chatMessageData['time'],
-      
       "recentMessageUID": FirebaseAuth.instance.currentUser!.uid,
     });
   }
