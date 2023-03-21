@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:tangteevs/profile/Profile.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,13 @@ class _GroupInfoState extends State<GroupInfo> {
   Stream? members;
   var groupData = {};
   var postData = {};
+  var currentUData = {};
   var member = [];
   bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+  double rating2 = 1;
+  final _reviewController = TextEditingController();
+  final _review = FirebaseFirestore.instance.collection('reviews').doc();
   @override
   void initState() {
     getData();
@@ -51,8 +57,14 @@ class _GroupInfoState extends State<GroupInfo> {
           .doc(widget.groupId)
           .get();
 
+      var currentUSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
       postData = postSnap.data()!;
       groupData = groupSnap.data()!;
+      currentUData = currentUSnap.data()!;
       member = groupSnap.data()?['member'];
       setState(() {});
     } catch (e) {
@@ -68,31 +80,35 @@ class _GroupInfoState extends State<GroupInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DismissKeyboard(
-        child: Scaffold(
-          backgroundColor: mobileBackgroundColor,
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: white,
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : MaterialApp(
+            home: DismissKeyboard(
+              child: Scaffold(
+                backgroundColor: mobileBackgroundColor,
+                appBar: AppBar(
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  centerTitle: true,
+                  elevation: 0,
+                  backgroundColor: lightPurple,
+                  title: Text(widget.groupName),
+                ),
+                body: SafeArea(
+                  child: memberList(),
+                ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
             ),
-            centerTitle: true,
-            elevation: 0,
-            backgroundColor: lightPurple,
-            title: Text(widget.groupName),
-          ),
-          body: SafeArea(
-            child: memberList(),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   memberList() {
@@ -192,7 +208,183 @@ class _GroupInfoState extends State<GroupInfo> {
                                             color: unselected,
                                             size: 30,
                                           ),
-                                          onPressed: (() {}),
+                                          onPressed: (() {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                      title:
+                                                          const Text('Review'),
+                                                      content: Form(
+                                                        key: _formKey,
+                                                        child: Column(
+                                                          children: [
+                                                            RatingBar.builder(
+                                                              initialRating: 1,
+                                                              minRating: 1,
+                                                              direction: Axis
+                                                                  .horizontal,
+                                                              allowHalfRating:
+                                                                  true,
+                                                              itemCount: 5,
+                                                              itemPadding:
+                                                                  const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          4.0),
+                                                              itemBuilder:
+                                                                  (context,
+                                                                          _) =>
+                                                                      const Icon(
+                                                                Icons.star,
+                                                                color: Colors
+                                                                    .amber,
+                                                              ),
+                                                              onRatingUpdate:
+                                                                  (rating) {
+                                                                if (rating !=
+                                                                    0) {
+                                                                  rating2 =
+                                                                      rating;
+                                                                }
+                                                              },
+                                                            ),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.16,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top: 0),
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.90,
+                                                                  child:
+                                                                      TextFormField(
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .multiline,
+                                                                    maxLines: 3,
+                                                                    controller:
+                                                                        _reviewController,
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        // _enteredTextD = value;
+                                                                        // if (value.length > 25) {
+                                                                        //   TextD = redColor;
+                                                                        // } else {
+                                                                        //   TextD = mobileSearchColor;
+                                                                        // }
+                                                                      });
+                                                                    },
+                                                                    decoration:
+                                                                        textInputDecoration
+                                                                            .copyWith(
+                                                                      labelStyle:
+                                                                          const TextStyle(
+                                                                        color:
+                                                                            mobileSearchColor,
+                                                                        fontFamily:
+                                                                            "MyCustomFont",
+                                                                      ),
+                                                                      hintText:
+                                                                          'write review here',
+                                                                      // counterText:
+                                                                      //     '${_enteredTextD.length.toString()} /150',
+                                                                    ),
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                          .isEmpty) {
+                                                                        return 'Please write review';
+                                                                      }
+                                                                      if (value
+                                                                              .length >
+                                                                          150) {
+                                                                        return 'Limit at 150 characters ';
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                'Cancle')),
+                                                        TextButton(
+                                                            onPressed:
+                                                                (() async {
+                                                              if (_formKey
+                                                                      .currentState!
+                                                                      .validate() ==
+                                                                  true) {
+                                                                setState(() {
+                                                                  isLoading =
+                                                                      true;
+                                                                });
+                                                                await _review
+                                                                    .set({
+                                                                  'reviewId':
+                                                                      _review
+                                                                          .id,
+                                                                  'uid':
+                                                                      documentSnapshot[
+                                                                          'uid'],
+                                                                  'review':
+                                                                      _reviewController
+                                                                          .text,
+                                                                  'rating':
+                                                                      rating2,
+                                                                  'reviewer_P':
+                                                                      currentUData[
+                                                                          'profile'],
+                                                                  'reviewer_N':
+                                                                      currentUData[
+                                                                          'Displayname'],
+                                                                  'timeStamp':
+                                                                      DateTime
+                                                                          .now(),
+                                                                }).whenComplete(
+                                                                        () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  setState(() {
+                                                                    _reviewController
+                                                                        .clear();
+                                                                    isLoading =
+                                                                        false;
+                                                                    // enable =
+                                                                    //     false;
+                                                                  });
+                                                                });
+                                                              }
+                                                            }),
+                                                            child: const Text(
+                                                                'Save'))
+                                                      ],
+                                                    ));
+                                          }),
                                         ),
                                       ),
                                     if (documentSnapshot['uid'] !=
@@ -312,7 +504,7 @@ void _showModalBottomSheetP(
                                   });
                                 }),
                                 child: const Text(
-                                  'Submit',
+                                  'Save',
                                   style: TextStyle(
                                     color: redColor,
                                   ),
