@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:age_calculator/age_calculator.dart';
 import '../widgets/PostCard.dart';
+import '../widgets/ReviewCard.dart';
 import '../widgets/custom_textfield.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -312,8 +313,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   child: MaterialButton(
                                                     onPressed: () {
                                                       Uri uri = Uri.parse(
-                                                          "https://www.instagram.com/${userData[
-                                                                      'instagram']}"); //https://www.instagram.com/
+                                                          "https://www.instagram.com/${userData['instagram']}"); //https://www.instagram.com/
                                                       _launchUrl(uri);
                                                     },
                                                     padding:
@@ -331,8 +331,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   ),
                                                 ),
                                                 const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(
+                                                  padding: EdgeInsets.only(
                                                     left: 20,
                                                   ),
                                                 ),
@@ -495,11 +494,47 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   Container(
-                                    child: const Center(
-                                      child: Text('Review',
-                                          style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold)),
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('reviews')
+                                          .where('uid', isEqualTo: widget.uid)
+                                          .orderBy('timeStamp',
+                                              descending: true)
+                                          .snapshots(),
+                                      builder: ((context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (snapshot.hasData) {
+                                          return ListView.builder(
+                                              itemCount:
+                                                  (snapshot.data! as dynamic)
+                                                      .docs
+                                                      .length,
+                                              itemBuilder: (context, index) =>
+                                                  Container(
+                                                    child: CardRWidget(
+                                                        review: (snapshot.data!
+                                                                as dynamic)
+                                                            .docs[index]),
+                                                  ));
+                                        }
+                                        return Container(
+                                          child: Center(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: const <Widget>[
+                                                SizedBox(
+                                                  height: 30.0,
+                                                  width: 30.0,
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }),
                                     ),
                                   ),
                                 ]),
@@ -531,22 +566,5 @@ class _ProfilePageState extends State<ProfilePage> {
         .map((MapEntry<String, String> e) =>
             '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
         .join('&');
-  }
-}
-
-class ReviewPage extends StatelessWidget {
-  const ReviewPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: const [
-          Center(
-            child: Text('Review'),
-          )
-        ],
-      ),
-    );
   }
 }
