@@ -48,7 +48,7 @@ class _ReviewCardState extends State<CardRWidget> {
     try {
       var userSnap = await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.review['uid'])
+          .doc(widget.review['reviewerId'])
           .get();
 
       userData = userSnap.data()!;
@@ -96,18 +96,19 @@ class _ReviewCardState extends State<CardRWidget> {
                         CircleAvatar(
                           backgroundColor: green,
                           backgroundImage: NetworkImage(
-                            widget.review['reviewer_P'].toString(),
+                            userData['profile'].toString(),
                           ),
                           radius: 25,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.65,
-                          child: Text('\t\t' + widget.review['reviewer_N'],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'MyCustomFont',
-                                color: mobileSearchColor,
-                              )),
+                          child:
+                              Text('\t\t' + userData['Displayname'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'MyCustomFont',
+                                    color: mobileSearchColor,
+                                  )),
                         ),
                       ],
                     ),
