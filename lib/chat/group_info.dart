@@ -356,12 +356,9 @@ class _GroupInfoState extends State<GroupInfo> {
                                                                           .text,
                                                                   'rating':
                                                                       rating2,
-                                                                  'reviewer_P':
+                                                                  'reviewerId':
                                                                       currentUData[
-                                                                          'profile'],
-                                                                  'reviewer_N':
-                                                                      currentUData[
-                                                                          'Displayname'],
+                                                                          'uid'],
                                                                   'timeStamp':
                                                                       DateTime
                                                                           .now(),
