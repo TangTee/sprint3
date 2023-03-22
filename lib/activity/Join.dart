@@ -51,7 +51,7 @@ class JoinPageState extends State<JoinPage> {
       postData = postSnap.data()!;
       waiting = postSnap.data()?['waiting'];
       waiting.add('Empty');
-      waitingLen = postSnap.data()?['waiting'].length;
+      waitingLen = postSnap.data()?['waiting'].length - 1;
       joinLen = joinSnap.data()?['member'].length - 1;
       setState(() {});
     } catch (e) {
@@ -116,165 +116,191 @@ class JoinPageState extends State<JoinPage> {
               child: CircularProgressIndicator(),
             )
           : SafeArea(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.85,
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .where('uid', whereIn: waiting)
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      return SizedBox(
-                        height: 500,
-                        width: 600,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                child: ListView.builder(
-                                    itemCount: snapshot.data!.docs.length,
-                                    itemBuilder: (context, index) {
-                                      final DocumentSnapshot documentSnapshot =
-                                          snapshot.data!.docs[index];
-                                      return Card(
-                                        elevation: 2,
-                                        margin: const EdgeInsets.all(10),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          3))),
-                                          child: SizedBox(
-                                            height: 70,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.only(top: 5),
+              child: Column(
+                children: [
+                  if (joinLen == int.parse(postData['peopleLimit']))
+                    const Text("Group is full",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: redColor)),
+                  if (joinLen == int.parse(postData['peopleLimit']) - 1)
+                    const Text("1 Last place",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: redColor)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.80,
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .where('uid', whereIn: waiting)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          return SizedBox(
+                            height: 500,
+                            width: 600,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    child: ListView.builder(
+                                        itemCount: snapshot.data!.docs.length,
+                                        itemBuilder: (context, index) {
+                                          final DocumentSnapshot
+                                              documentSnapshot =
+                                              snapshot.data!.docs[index];
+                                          return Card(
+                                            elevation: 2,
+                                            margin: const EdgeInsets.all(10),
+                                            child: ClipPath(
+                                              clipper: ShapeBorderClipper(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3))),
                                               child: SizedBox(
-                                                height: 80,
-                                                child: ListTile(
-                                                  leading: CircleAvatar(
-                                                    backgroundColor: green,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                      documentSnapshot[
-                                                              'profile']
-                                                          .toString(),
-                                                    ),
-                                                    radius: 25,
-                                                  ),
-                                                  title: Text(documentSnapshot[
-                                                      'Displayname']),
-                                                  //subtitle: documentSnapshot['bio'],
-                                                  trailing:
-                                                      SingleChildScrollView(
-                                                    child: SizedBox(
-                                                        width: 100,
-                                                        child: Row(
-                                                          children: [
-                                                            if (joinLen ==
-                                                                int.parse(postData[
-                                                                    'peopleLimit']))
-                                                              const Icon(
-                                                                Icons.check,
-                                                                color:
-                                                                    unselected,
-                                                              ),
-                                                            if (joinLen !=
-                                                                int.parse(postData[
-                                                                    'peopleLimit']))
-                                                              Expanded(
-                                                                child:
-                                                                    IconButton(
-                                                                  icon:
-                                                                      const Icon(
-                                                                    Icons.check,
-                                                                    color:
-                                                                        green,
-                                                                  ),
-                                                                  onPressed: () =>
-                                                                      joinActivity(
-                                                                    widget
-                                                                        .postid
-                                                                        .toString(),
-                                                                    documentSnapshot[
-                                                                        'uid'],
-                                                                    postData[
-                                                                        'waiting'],
-                                                                    joinLen,
+                                                height: 70,
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5),
+                                                  child: SizedBox(
+                                                    height: 80,
+                                                    child: ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundColor: green,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                          documentSnapshot[
+                                                                  'profile']
+                                                              .toString(),
+                                                        ),
+                                                        radius: 25,
+                                                      ),
+                                                      title: Text(
+                                                          documentSnapshot[
+                                                              'Displayname']),
+                                                      //subtitle: documentSnapshot['bio'],
+                                                      trailing:
+                                                          SingleChildScrollView(
+                                                        child: SizedBox(
+                                                            width: 100,
+                                                            child: Row(
+                                                              children: [
+                                                                if (joinLen ==
                                                                     int.parse(
                                                                         postData[
-                                                                            'peopleLimit']),
-                                                                  ).whenComplete(
+                                                                            'peopleLimit']))
+                                                                  const Icon(
+                                                                    Icons.check,
+                                                                    color:
+                                                                        unselected,
+                                                                  ),
+                                                                if (joinLen !=
+                                                                    int.parse(
+                                                                        postData[
+                                                                            'peopleLimit']))
+                                                                  Expanded(
+                                                                    child:
+                                                                        IconButton(
+                                                                      icon:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .check,
+                                                                        color:
+                                                                            green,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () =>
+                                                                              joinActivity(
+                                                                        widget
+                                                                            .postid
+                                                                            .toString(),
+                                                                        documentSnapshot[
+                                                                            'uid'],
+                                                                        postData[
+                                                                            'waiting'],
+                                                                        joinLen,
+                                                                        int.parse(
+                                                                            postData['peopleLimit']),
+                                                                      ).whenComplete(() {
+                                                                        setState(
+                                                                            () {
+                                                                          isLoading =
+                                                                              true;
+                                                                        });
+                                                                        getData();
+                                                                      }),
+                                                                    ),
+                                                                  ),
+                                                                Expanded(
+                                                                  child:
+                                                                      IconButton(
+                                                                    icon:
+                                                                        const Icon(
+                                                                      Icons
+                                                                          .close,
+                                                                      color:
+                                                                          orange,
+                                                                    ),
+                                                                    onPressed: () =>
+                                                                        denyActivity(
+                                                                      widget
+                                                                          .postid
+                                                                          .toString(),
+                                                                      documentSnapshot[
+                                                                          'uid'],
+                                                                      postData[
+                                                                          'waiting'],
+                                                                    ).whenComplete(
+                                                                            () {
+                                                                      setState(
                                                                           () {
-                                                                    setState(
-                                                                        () {
-                                                                      isLoading =
-                                                                          true;
-                                                                    });
-                                                                    getData();
-                                                                  }),
+                                                                        isLoading =
+                                                                            true;
+                                                                      });
+                                                                      getData();
+                                                                    }),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            Expanded(
-                                                              child: IconButton(
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.close,
-                                                                  color: orange,
-                                                                ),
-                                                                onPressed: () =>
-                                                                    denyActivity(
-                                                                  widget.postid
-                                                                      .toString(),
-                                                                  documentSnapshot[
-                                                                      'uid'],
-                                                                  postData[
-                                                                      'waiting'],
-                                                                ).whenComplete(
-                                                                        () {
-                                                                  setState(() {
-                                                                    isLoading =
-                                                                        true;
-                                                                  });
-                                                                  getData();
-                                                                }),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        )),
+                                                              ],
+                                                            )),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
+                                          );
+                                        }),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    }
-                    return Container(
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const <Widget>[
-                            SizedBox(
-                              height: 30.0,
-                              width: 30.0,
-                              child: CircularProgressIndicator(),
+                          );
+                        }
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const <Widget>[
+                                SizedBox(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
     );
