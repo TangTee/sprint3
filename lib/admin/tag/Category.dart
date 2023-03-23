@@ -169,14 +169,28 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      clipBehavior: Clip.hardEdge,
       elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        side: const BorderSide(
+          color: unselected,
+          width: 1,
+        ),
+      ),
       child: ClipPath(
         child: Container(
           height: 80,
           decoration: BoxDecoration(
-              border: Border(
-                  left: BorderSide(
-                      color: HexColor(widget.snap['color']), width: 10))),
+            border: Border(
+              left: BorderSide(
+                color: HexColor(
+                  widget.snap['color'],
+                ),
+                width: 20,
+              ),
+            ),
+          ),
           child: ListTile(
             title: Text(widget.snap['Category']),
             subtitle: Text(widget.snap['color']),
