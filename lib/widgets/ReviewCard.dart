@@ -68,8 +68,8 @@ class _ReviewCardState extends State<CardRWidget> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(
-        widget.review['timeStamp'].seconds * 1000);
+    DateTime date =
+        DateTime.fromMillisecondsSinceEpoch(widget.review['timeStamp'].seconds);
     return SafeArea(
       child: Container(
         child: Card(
@@ -100,17 +100,39 @@ class _ReviewCardState extends State<CardRWidget> {
                           ),
                           radius: 25,
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          child:
-                              Text('\t\t' + userData['Displayname'].toString(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              child: Text(
+                                  '\t\t' + userData['Displayname'].toString(),
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'MyCustomFont',
                                     color: mobileSearchColor,
                                   )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 5,
+                                left: 10,
+                              ),
+                              child: Text(
+                                '$date',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: 'MyCustomFont',
+                                  color: mobileSearchColor,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
                     ),
                     RatingBar.builder(
                       initialRating: widget.review['rating'],
@@ -118,7 +140,7 @@ class _ReviewCardState extends State<CardRWidget> {
                       ignoreGestures: true,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
                       itemBuilder: (context, _) => const Icon(
                         Icons.star,
                         color: Colors.amber,
@@ -127,8 +149,8 @@ class _ReviewCardState extends State<CardRWidget> {
                         null;
                       },
                     ),
-                    const SizedBox(
-                      height: 5,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
                     ),
                     Text('\t\t' + widget.review['review'],
                         style: const TextStyle(
@@ -138,15 +160,6 @@ class _ReviewCardState extends State<CardRWidget> {
                         )),
                     const SizedBox(
                       height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 210),
-                      child: Text('\t\t$date',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'MyCustomFont',
-                            color: mobileSearchColor,
-                          )),
                     ),
                   ],
                 ),
