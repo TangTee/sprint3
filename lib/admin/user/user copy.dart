@@ -1,209 +1,196 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:tangteevs/Landing.dart';
-// import 'package:tangteevs/admin/user/data.dart';
-// import 'package:tangteevs/admin/user/verify.dart';
-// import 'package:tangteevs/testhwak.dart';
-// import '../../HomePage.dart';
-// import '../../Profile/Profile.dart';
-// import '../../utils/color.dart';
-// import '../../widgets/custom_textfield.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tangteevs/admin/user/UserCard.dart';
+import '../../utils/color.dart';
+import '../../widgets/custom_textfield.dart';
 
-// class UserPage extends StatefulWidget {
-//   const UserPage({Key? key}) : super(key: key);
+class SearchData extends StatefulWidget {
+  dynamic mobileBackgroundColor;
+  SearchData({Key? key, this.mobileBackgroundColor}) : super(key: key);
 
-//   @override
-//   _UserPageState createState() => _UserPageState();
-// }
+  @override
+  State<SearchData> createState() => _SearchUserState();
+}
 
-// class _UserPageState extends State<UserPage> {
-//   bool lightTheme = true;
-//   Color currentColor = white;
-//   void changeColor(Color color) => setState(() => currentColor = color);
-//   void _showModalBottomSheet(BuildContext context) {
-//     showModalBottomSheet(
-//       useRootNavigator: true,
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AnimatedTheme(
-//           data: lightTheme ? ThemeData.light() : ThemeData.dark(),
-//           child: Container(
-//             child: Column(
-//               mainAxisSize: MainAxisSize.min,
-//               children: <Widget>[
-//                 // hwak
-//                 ListTile(
-//                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-//                   title: Center(
-//                     child: Text(
-//                       'test hwak',
-//                       style:
-//                           TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
-//                     ),
-//                   ),
-//                   onTap: () {
-//                     Navigator.of(context, rootNavigator: true)
-//                         .pushAndRemoveUntil(
-//                       MaterialPageRoute(
-//                         builder: (BuildContext context) {
-//                           return testColor();
-//                         },
-//                       ),
-//                       (_) => false,
-//                     );
-//                   },
-//                 ),
-//                 ListTile(
-//                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-//                   title: Center(
-//                     child: Text(
-//                       'Go to User page',
-//                       style:
-//                           TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
-//                     ),
-//                   ),
-//                   onTap: () {
-//                     Navigator.of(context, rootNavigator: true)
-//                         .pushAndRemoveUntil(
-//                       MaterialPageRoute(
-//                         builder: (BuildContext context) {
-//                           return MyHomePage();
-//                         },
-//                       ),
-//                       (_) => false,
-//                     );
-//                   },
-//                 ),
-//                 ListTile(
-//                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-//                   title: Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       Icon(lightTheme
-//                           ? Icons.dark_mode_rounded
-//                           : Icons.light_mode_rounded),
-//                       Text(
-//                         lightTheme ? 'Dark Mode' : '  Light ',
-//                         style: TextStyle(
-//                           fontFamily: 'MyCustomFont',
-//                           fontSize: 20,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                   onTap: () {
-//                     lightTheme = !lightTheme;
-//                     Navigator.pop(context);
-//                   },
-//                 ),
-//                 ListTile(
-//                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-//                   title: const Center(
-//                       child: Text(
-//                     'Logout',
-//                     style: TextStyle(
-//                         fontFamily: 'MyCustomFont',
-//                         fontSize: 20,
-//                         color: redColor),
-//                   )),
-//                   onTap: () {
-//                     FirebaseAuth.instance.signOut();
-//                     nextScreenReplaceOut(context, const LandingPage());
-//                   },
-//                 ),
-//                 ListTile(
-//                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-//                   title: const Center(
-//                       child: Text(
-//                     'Cancel',
-//                     style: TextStyle(
-//                         color: redColor,
-//                         fontFamily: 'MyCustomFont',
-//                         fontSize: 20),
-//                   )),
-//                   onTap: () {
-//                     Navigator.pop(context);
-//                   },
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
+class _SearchUserState extends State<SearchData> {
+  String name = '';
+  final bool _isLoading = false;
+  bool theme = false;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 2,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           toolbarHeight: 50,
-//           backgroundColor: mobileBackgroundColor,
-//           elevation: 1,
-//           leadingWidth: 130,
-//           centerTitle: true,
-//           title: const Text('test'),
-//           leading: Container(
-//             padding: const EdgeInsets.all(0),
-//             child: Image.asset('assets/images/logo with name.png',
-//                 fit: BoxFit.scaleDown),
-//           ),
-//           actions: [
-//             IconButton(
-//               icon: const Icon(
-//                 Icons.settings,
-//                 color: purple,
-//                 size: 30,
-//               ),
-//               onPressed: () {
-//                 _showModalBottomSheet(context);
-//               },
-//             ),
-//           ],
-//           bottom: const TabBar(
-//             indicatorColor: green,
-//             labelColor: green,
-//             labelPadding: EdgeInsets.symmetric(horizontal: 30),
-//             unselectedLabelColor: unselected,
-//             labelStyle: TextStyle(
-//                 fontSize: 20.0, fontFamily: 'MyCustomFont'), //For Selected tab
-//             unselectedLabelStyle: TextStyle(
-//                 fontSize: 20.0,
-//                 fontFamily: 'MyCustomFont'), //For Un-selected Tabs
-//             tabs: [
-//               Tab(text: 'Verify'),
-//               Tab(text: 'Data'),
-//             ],
-//           ),
-//         ),
-//         body: TabBarView(
-//           children: [
-//             verify(),
-//             data(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  void initState() {
+    super.initState();
+  }
 
-// class verify extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       home: VerifyPage(),
-//     );
-//   }
-// }
+  final CollectionReference _users =
+      FirebaseFirestore.instance.collection('users');
 
-// class data extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       home: SearchUser(),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: DismissKeyboard(
+        child: Scaffold(
+          backgroundColor: mobileBackgroundColor,
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: Search(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Search extends StatefulWidget {
+  const Search({super.key});
+
+  @override
+  State<Search> createState() => _SearchState();
+}
+
+class _SearchState extends State<Search> {
+  final userSearch = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return NestedScrollView(
+      floatHeaderSlivers: true,
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            forceElevated: innerBoxIsScrolled,
+            backgroundColor: mobileBackgroundColor,
+            elevation: 0,
+            centerTitle: false,
+            title: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.05,
+                child: TextFormField(
+                  controller: userSearch,
+                  textInputAction: TextInputAction.search,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: searchInputDecoration.copyWith(
+                    hintText: 'ค้นหา user ด้วย displayname หรือ email',
+                    hintStyle: const TextStyle(
+                      color: unselected,
+                      fontFamily: 'MyCustomFont',
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search_outlined,
+                      color: orange,
+                      size: 30,
+                    ),
+                    suffixIcon: userSearch.text.isEmpty
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Icons.clear),
+                            color: orange,
+                            iconSize: 18,
+                            onPressed: (() {
+                              userSearch.clear();
+                              setState(() {});
+                            })),
+                  ),
+                  onFieldSubmitted: (value) {},
+                ),
+              ),
+            ),
+          ),
+          //),
+        ];
+      },
+      body: SafeArea(
+        child: UserCard(userSearch: userSearch.text),
+      ),
+    );
+  }
+}
+
+class UserCard extends StatelessWidget {
+  final CollectionReference _users =
+      FirebaseFirestore.instance.collection('users');
+
+  //PostCard({super.key});
+  final String userSearch;
+  UserCard({Key? key, required this.userSearch}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return userSearch != ""
+        ? StreamBuilder<QuerySnapshot>(
+            stream: _users
+                .where('verify', isEqualTo: true)
+                .where('Displayname', isGreaterThanOrEqualTo: userSearch)
+                //.where('email', isGreaterThanOrEqualTo: userSearch)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const <Widget>[
+                        SizedBox(
+                          height: 30.0,
+                          width: 30.0,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: Text('User not found',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'MyCustomFont',
+                        color: unselected,
+                        fontWeight: FontWeight.bold,
+                      )),
+                );
+              }
+
+              return ListView.builder(
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) => Container(
+                        child: UCardWidget(
+                            snap: (snapshot.data! as dynamic).docs[index]),
+                      ));
+            })
+        : StreamBuilder<QuerySnapshot>(
+            stream: _users.where('verify', isEqualTo: true).snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const <Widget>[
+                        SizedBox(
+                          height: 30.0,
+                          width: 30.0,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) => Container(
+                        child: UCardWidget(
+                            snap: (snapshot.data! as dynamic).docs[index]),
+                      ));
+            });
+  }
+}
