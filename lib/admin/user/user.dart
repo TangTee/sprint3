@@ -19,11 +19,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  bool lightTheme = true;
-  Color currentColor = white;
-  void changeColor(Color color) => setState(() => currentColor = color);
   late final LocalNotificationService service;
-  bool theme = true;
 
   @override
   void initState() {
@@ -49,129 +45,98 @@ class _UserPageState extends State<UserPage> {
 
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: lightTheme ? white : Colors.black,
       useRootNavigator: true,
       context: context,
       builder: (BuildContext context) {
-        return AnimatedTheme(
-          data: lightTheme ? ThemeData.light() : ThemeData.dark(),
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                // hwak 1
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: const Center(
-                    child: Text(
-                      'test hwak',
-                      style:
-                          TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
-                    ),
+        return Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // hwak 1
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
+                title: const Center(
+                  child: Text(
+                    'test hwak',
+                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
                   ),
-                  onTap: () {
-                    Navigator.of(context, rootNavigator: true)
-                        .pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const testColor();
-                        },
-                      ),
-                      (_) => false,
-                    );
-                  },
                 ),
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const testColor();
+                      },
+                    ),
+                    (_) => false,
+                  );
+                },
+              ),
 
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: const Center(
-                    child: Text(
-                      'Go to User page',
-                      style:
-                          TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
+                title: const Center(
+                  child: Text(
+                    'Go to User page',
+                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const MyHomePage(
+                          index: 4,
+                        );
+                      },
                     ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context, rootNavigator: true)
-                        .pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const MyHomePage(
-                            index: 4,
-                          );
-                        },
-                      ),
-                      (_) => false,
-                    );
-                  },
-                ),
-                // hwak2
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(lightTheme
-                          ? Icons.dark_mode_rounded
-                          : Icons.light_mode_rounded),
-                      Text(
-                        lightTheme ? 'Dark Mode' : '  Light ',
-                        style: const TextStyle(
-                          fontFamily: 'MyCustomFont',
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    setState(() {
-                      lightTheme = !lightTheme;
-                    });
-                    theme = lightTheme;
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: const Center(
-                      child: Text(
-                    'Logout',
-                    style: TextStyle(
-                        fontFamily: 'MyCustomFont',
-                        fontSize: 20,
-                        color: redColor),
-                  )),
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    nextScreenReplaceOut(context, const LandingPage());
-                  },
-                ),
-                ElevatedButton(
-                    onPressed: () async {
-                      // await service.showNotification(
-                      //     id: 0,
-                      //     title: 'Notification Title',
-                      //     body: 'Some body');
-                      // String? fcmKey = await getFcmToken();
-                      // print('FCM Key: $fcmKey');
-                    },
-                    child: const Text("Item 1")),
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: const Center(
-                      child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                        color: redColor,
-                        fontFamily: 'MyCustomFont',
-                        fontSize: 20),
-                  )),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
+                    (_) => false,
+                  );
+                },
+              ),
+              // hwak2
+
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
+                title: const Center(
+                    child: Text(
+                  'Logout',
+                  style: TextStyle(
+                      fontFamily: 'MyCustomFont',
+                      fontSize: 20,
+                      color: redColor),
+                )),
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  nextScreenReplaceOut(context, const LandingPage());
+                },
+              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     // await service.showNotification(
+              //     //     id: 0,
+              //     //     title: 'Notification Title',
+              //     //     body: 'Some body');
+              //     // String? fcmKey = await getFcmToken();
+              //     // print('FCM Key: $fcmKey');
+              //   },
+              //   child: const Text("Item 1"),
+              // ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
+                title: const Center(
+                    child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                      color: redColor,
+                      fontFamily: 'MyCustomFont',
+                      fontSize: 20),
+                )),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
         );
       },
@@ -180,15 +145,14 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor =
-        useWhiteForeground(currentColor) ? Colors.white : Colors.black;
+    // final foregroundColor =
+    //     useWhiteForeground(currentColor) ? Colors.white : Colors.black;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 50,
-          backgroundColor:
-              lightTheme ? mobileBackgroundColor : mobileSearchColor,
+          backgroundColor: mobileBackgroundColor,
           elevation: 1,
           leadingWidth: 130,
           centerTitle: true,
@@ -225,12 +189,8 @@ class _UserPageState extends State<UserPage> {
         ),
         body: TabBarView(
           children: [
-            VerifyPage(
-              lightTheme: theme,
-            ),
-            SearchData(
-              lightTheme: theme,
-            ),
+            VerifyPage(),
+            SearchData(),
           ],
         ),
       ),
