@@ -21,7 +21,6 @@ class _MainPageState extends State<MainPage> {
   final TextEditingController _colorController = TextEditingController();
   final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
 
-  bool lightTheme = true;
   Color currentColor = purple;
   List<Color> colorHistory = [];
 
@@ -73,8 +72,8 @@ class _MainPageState extends State<MainPage> {
                         final String Category = _CategoryController.text;
                         await categorysSet.set({
                           "Category": Category,
-                          "color": '#${currentColor.toString().substring(
-                                  10, currentColor.toString().length - 1)}',
+                          "color":
+                              '#${currentColor.toString().substring(10, currentColor.toString().length - 1)}',
                           "categoryId": categorysSet.id
                         });
 
@@ -102,11 +101,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor =
-        useWhiteForeground(currentColor) ? Colors.white : Colors.black;
     return MaterialApp(
       home: DismissKeyboard(
         child: Scaffold(
+          backgroundColor: mobileBackgroundColor,
           appBar: AppBar(
             toolbarHeight: 50,
             backgroundColor: mobileBackgroundColor,
@@ -119,8 +117,9 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           resizeToAvoidBottomInset: false,
-          backgroundColor: mobileBackgroundColor,
-          body: Category(),
+          body: SafeArea(
+            child: Category(),
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => _create(),
             child: Icon(Icons.add),
@@ -135,12 +134,13 @@ class Category extends StatelessWidget {
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
 
-   Category({super.key});
+  Category({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: mobileBackgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
