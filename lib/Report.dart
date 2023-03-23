@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../utils/color.dart';
 
-
 void showModalBottomSheetRP(BuildContext context, rPid) {
   final uid = FirebaseAuth.instance.currentUser!.uid;
   final report =
@@ -239,7 +238,7 @@ void showModalBottomSheetRP(BuildContext context, rPid) {
   );
 }
 
-void showModalBottomSheetRC(BuildContext context, rPid, Map mytext) {
+void showModalBottomSheetRC(BuildContext context, rPid, mytext) {
   final uid = FirebaseAuth.instance.currentUser!.uid;
   final report =
       FirebaseFirestore.instance.collection('report').doc(mytext['cid']);
