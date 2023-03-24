@@ -25,8 +25,8 @@ class _EditActState extends State<EditAct> {
   String location = "";
   String detail = "";
   String people = "";
-  String tag = '';
-  String tagColor = '';
+  String tag = "";
+  String tagColor = "";
   DatabaseService databaseService = DatabaseService();
   final bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
@@ -41,11 +41,8 @@ class _EditActState extends State<EditAct> {
   final TextEditingController _peopleLimitController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
-  final _tagController = TextEditingController();
-  final _tagColorController = TextEditingController();
-  var _tag;
-  var _tag2;
-  var _tag2Color;
+  final TextEditingController _tagController = TextEditingController();
+  final TextEditingController _tagColorController = TextEditingController();
   var value;
   var test;
   var postData = {};
@@ -54,10 +51,10 @@ class _EditActState extends State<EditAct> {
   var countPlace;
   var countDetail;
   var countPeople;
-  Color TextA = mobileSearchColor;
-  Color TextP = mobileSearchColor;
-  Color TextD = mobileSearchColor;
-  Color TextL = mobileSearchColor;
+  Color textA = mobileSearchColor;
+  Color textP = mobileSearchColor;
+  Color textD = mobileSearchColor;
+  Color textL = mobileSearchColor;
   @override
   void initState() {
     super.initState();
@@ -178,7 +175,7 @@ class _EditActState extends State<EditAct> {
                                           hintText: 'Activity Name',
                                           counterText:
                                               '${countActivity.length.toString()} /25',
-                                          counterStyle: TextStyle(color: TextA),
+                                          counterStyle: TextStyle(color: textA),
                                           prefixIcon: const Icon(
                                             Icons.title,
                                             color: lightPurple,
@@ -197,9 +194,9 @@ class _EditActState extends State<EditAct> {
                                           activityName = val;
                                           countActivity = val;
                                           if (val.length > 12) {
-                                            TextA = redColor;
+                                            textA = redColor;
                                           } else {
-                                            TextA = mobileSearchColor;
+                                            textA = mobileSearchColor;
                                           }
                                         });
                                       },
@@ -220,7 +217,7 @@ class _EditActState extends State<EditAct> {
                                         hintText: 'place',
                                         counterText:
                                             '${countPlace.length.toString()} /25',
-                                        counterStyle: TextStyle(color: TextP),
+                                        counterStyle: TextStyle(color: textP),
                                         prefixIcon: const Icon(
                                           Icons.maps_home_work,
                                           color: lightPurple,
@@ -239,9 +236,9 @@ class _EditActState extends State<EditAct> {
                                         place = val;
                                         countPlace = val;
                                         if (val.length > 12) {
-                                          TextP = redColor;
+                                          textP = redColor;
                                         } else {
-                                          TextP = mobileSearchColor;
+                                          textP = mobileSearchColor;
                                         }
                                       });
                                     },
@@ -370,7 +367,7 @@ class _EditActState extends State<EditAct> {
                                         hintText: 'Detail',
                                         counterText:
                                             '${countDetail.length.toString()} /150',
-                                        counterStyle: TextStyle(color: TextD),
+                                        counterStyle: TextStyle(color: textD),
                                         prefixIcon: const Icon(
                                           Icons.pending,
                                           color: lightPurple,
@@ -387,9 +384,9 @@ class _EditActState extends State<EditAct> {
                                         detail = val;
                                         countDetail = val;
                                         if (val.length > 12) {
-                                          TextD = redColor;
+                                          textD = redColor;
                                         } else {
-                                          TextD = mobileSearchColor;
+                                          textD = mobileSearchColor;
                                         }
                                       });
                                     },
@@ -407,7 +404,7 @@ class _EditActState extends State<EditAct> {
                                     decoration: textInputDecorationp.copyWith(
                                         hintText: 'People Limit',
                                         counterText: '$countPeople /99',
-                                        counterStyle: TextStyle(color: TextL),
+                                        counterStyle: TextStyle(color: textL),
                                         prefixIcon: const Icon(
                                           Icons.person_outline,
                                           color: lightPurple,
@@ -426,9 +423,9 @@ class _EditActState extends State<EditAct> {
                                         people = val;
                                         countPeople = val;
                                         if (val.length > 2) {
-                                          TextL = redColor;
+                                          textL = redColor;
                                         } else {
-                                          TextL = mobileSearchColor;
+                                          textL = mobileSearchColor;
                                         }
                                       });
                                     },
