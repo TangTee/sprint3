@@ -490,7 +490,7 @@ class _ChatPageState extends State<ChatPage> {
 
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference referenceRoot = FirebaseStorage.instance.ref();
-      Reference referenceDirImages = referenceRoot.child('Profile');
+      Reference referenceDirImages = referenceRoot.child('Messages');
       Reference referenceImageToUpload =
           referenceDirImages.child(getRandomString(30));
       //Store the file

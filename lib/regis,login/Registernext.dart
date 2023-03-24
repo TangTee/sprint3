@@ -158,7 +158,8 @@ class _RegisnextPageState extends State<RegisnextPage> {
                                 Reference referenceDirImages =
                                     referenceRoot.child('Profile');
                                 Reference referenceImageToUpload =
-                                    referenceDirImages.child("${user?.uid}");
+                                    referenceDirImages.child(
+                                        DateTime.now().microsecond.toString());
                                 try {
                                   //Store the file
                                   await referenceImageToUpload

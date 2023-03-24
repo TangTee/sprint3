@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:tangteevs/HomePage.dart';
@@ -167,7 +168,8 @@ class _LoginState extends State<Login> {
                                   foregroundColor: primaryColor,
                                 ),
                                 onPressed: () {
-                                  nextScreen(context, const ResetPasswordPage());
+                                  nextScreen(
+                                      context, const ResetPasswordPage());
                                 },
                                 child: const Text("Forget Password?"))
                           ],
@@ -276,15 +278,29 @@ class _LoginState extends State<Login> {
               .get();
           userData = snap.data()!;
           var a = userData['admin'];
-          if (a == true) {
+          if (a == true && userData['points'] > 0) {
             nextScreenReplace(context, const AdminHomePage());
-          } else {
+          } else if (a == false && userData['points'] > 0) {
             nextScreenReplace(
                 context,
                 const MyHomePage(
                   index: 0,
                 ));
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      title: const Text('Ban alert'),
+                      content: const Text('you have been ban form tungtee'),
+                      actions: [
+                        TextButton(
+                            onPressed: () =>
+                                nextScreenReplace(context, const Login()),
+                            child: const Text('ok')),
+                      ],
+                    ));
           }
+
           //nextScreenReplace(context, MyHomePage());
         } else {
           showSnackbar(context, redColor, value);

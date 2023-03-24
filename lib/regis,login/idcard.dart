@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -318,6 +319,16 @@ class _IdcardPageState extends State<IdcardPage> {
                               print('${file?.path}');
 
                               if (file == null) return;
+                              String getRandomString(int length) {
+                                const characters =
+                                    '+-*=?AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
+                                Random random = Random();
+                                return String.fromCharCodes(Iterable.generate(
+                                    length,
+                                    (_) => characters.codeUnitAt(
+                                        random.nextInt(characters.length))));
+                              }
+
                               String uniqueFileName = DateTime.now()
                                   .millisecondsSinceEpoch
                                   .toString();
@@ -326,7 +337,7 @@ class _IdcardPageState extends State<IdcardPage> {
                               Reference referenceDirImages =
                                   referenceRoot.child('idcard');
                               Reference referenceImageToUpload =
-                                  referenceDirImages.child("${user?.uid}");
+                                  referenceDirImages.child(getRandomString(40));
                               try {
                                 //Store the file
                                 await referenceImageToUpload
@@ -397,7 +408,8 @@ class _IdcardPageState extends State<IdcardPage> {
                                           fontWeight: FontWeight.bold),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          nextScreen(context, const TermsPage());
+                                          nextScreen(
+                                              context, const TermsPage());
                                         }),
                                   TextSpan(
                                       text: " and ",
@@ -414,7 +426,8 @@ class _IdcardPageState extends State<IdcardPage> {
                                           fontWeight: FontWeight.bold),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          nextScreen(context, const PrivacyPage());
+                                          nextScreen(
+                                              context, const PrivacyPage());
                                         }),
                                 ],
                               )),
