@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -438,23 +440,51 @@ class _MyCommentState extends State<Comment> {
                                                           ],
                                                         ),
                                                         SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.7,
-                                                            child: const Text(
-                                                                'Detail',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontFamily:
-                                                                        'MyCustomFont',
-                                                                    color:
-                                                                        mobileSearchColor,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800))),
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                          child: const Text(
+                                                            'Detail',
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'MyCustomFont',
+                                                                color:
+                                                                    mobileSearchColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.01,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                          child: Text(
+                                                            '\t\t\t\t\t' +
+                                                                documentSnapshot[
+                                                                    'detail'],
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'MyCustomFont',
+                                                              color:
+                                                                  mobileSearchColor,
+                                                            ),
+                                                          ),
+                                                        ),
                                                         SizedBox(
                                                           height: MediaQuery.of(
                                                                       context)
@@ -504,14 +534,14 @@ class _MyCommentState extends State<Comment> {
                                                                           },
                                                                           style: OutlinedButton.styleFrom(
                                                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                                                                              side: BorderSide(color: HexColor(postData['tagColor']), width: 1.5)),
+                                                                              side: BorderSide(color: HexColor(documentSnapshot['tagColor']), width: 1.5)),
                                                                           child:
                                                                               Padding(
                                                                             padding:
                                                                                 const EdgeInsets.only(top: 2),
                                                                             child:
                                                                                 Text(
-                                                                              postData['tag'],
+                                                                              documentSnapshot['tag'],
                                                                               style: const TextStyle(color: mobileSearchColor, fontSize: 14),
                                                                               textAlign: TextAlign.center,
                                                                             ),
@@ -1097,16 +1127,14 @@ class _MyCommentState extends State<Comment> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.of(context, rootNavigator: true)
-                        .pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return EditAct(
-                            postid: postData['postid'],
-                          );
-                        },
+                    PersistentNavBarNavigator.pushNewScreen(
+                      context,
+                      screen: EditAct(
+                        postid: postData['postid'],
                       ),
-                      (_) => false,
+                      withNavBar: false, // OPTIONAL VALUE. True by default.
+                      pageTransitionAnimation:
+                          PageTransitionAnimation.cupertino,
                     );
                   },
                 ),
@@ -1270,7 +1298,11 @@ class _MyCommentState extends State<Comment> {
                                 TextButton(
                                     onPressed: () => Navigator.of(context)
                                         .popUntil((route) => route.isFirst),
-                                    child: const Text('Cancle')),
+                                    child: const Text(
+                                      'Cancle',
+                                      style:
+                                          TextStyle(color: mobileSearchColor),
+                                    )),
                                 TextButton(
                                     onPressed: (() {
                                       FirebaseFirestore.instance
@@ -1291,7 +1323,10 @@ class _MyCommentState extends State<Comment> {
                                             .popUntil((route) => route.isFirst);
                                       });
                                     }),
-                                    child: const Text('Save'))
+                                    child: const Text(
+                                      'Save',
+                                      style: TextStyle(color: green),
+                                    ))
                               ],
                             ));
                   },
@@ -1313,11 +1348,15 @@ class _MyCommentState extends State<Comment> {
                         builder: (context) => AlertDialog(
                               title: const Text('Delete Comment'),
                               content: const Text(
-                                  'Are you sure you want to permanently\nremove this comment from Tungtee?'),
+                                  'Are you sure you want to permanently \n remove this comment from Tungtee?'),
                               actions: [
                                 TextButton(
                                     onPressed: () => Navigator.pop(context),
-                                    child: const Text('Cancle')),
+                                    child: const Text(
+                                      'Cancle',
+                                      style:
+                                          TextStyle(color: mobileSearchColor),
+                                    )),
                                 TextButton(
                                     onPressed: (() {
                                       FirebaseFirestore.instance
@@ -1331,7 +1370,10 @@ class _MyCommentState extends State<Comment> {
                                             .popUntil((route) => route.isFirst);
                                       });
                                     }),
-                                    child: const Text('Delete'))
+                                    child: const Text(
+                                      'Delete',
+                                      style: TextStyle(color: redColor),
+                                    ))
                               ],
                             ));
                   },
