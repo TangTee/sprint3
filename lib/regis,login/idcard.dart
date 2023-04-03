@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,6 +15,8 @@ import '../team/privacy.dart';
 import '../team/team.dart';
 import '../utils/color.dart';
 import '../widgets/custom_textfield.dart';
+import 'package:camera/camera.dart';
+import 'dart:io';
 
 class IdcardPage extends StatefulWidget {
   final String fullName;
@@ -31,18 +34,21 @@ class IdcardPage extends StatefulWidget {
 }
 
 class _IdcardPageState extends State<IdcardPage> {
+  final textRecognizer = TextRecognizer();
   DatabaseService databaseService = DatabaseService();
   final user = FirebaseAuth.instance.currentUser;
   final bool _isLoading = false;
   bool isChecked = false;
   bool isadmin = false;
   String bio = "";
+  String ai = "";
   final _formKey = GlobalKey<FormState>();
   AuthService authService = AuthService();
   String _ImageidcardController = '';
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('users');
   File? media;
+
   final TextEditingController _dayController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _yearController = TextEditingController();
@@ -349,10 +355,26 @@ class _IdcardPageState extends State<IdcardPage> {
                               } catch (error) {
                                 //Some error occurred
                               }
+
                               setState(() {
                                 media = File(file.path);
                               });
-                              print(_ImageidcardController);
+                              try {
+                                final file = media;
+                                final inputImage = InputImage.fromFile(file!);
+                                final recognizedText = await textRecognizer
+                                    .processImage(inputImage);
+                                setState(() {
+                                  ai = recognizedText.text;
+                                });
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'An error occurred when scanning text'),
+                                  ),
+                                );
+                              }
                             },
                             child: const Text("Take a photo of idcard"),
                           ),
@@ -495,6 +517,7 @@ class _IdcardPageState extends State<IdcardPage> {
             month: _monthController.text,
             password: widget.password,
             year: _yearController.text,
+            ai: ai,
           ));
     }
   }

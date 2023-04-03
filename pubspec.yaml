@@ -89,6 +89,11 @@ dependencies:
   firebase_database: ^10.0.9
   persistent_bottom_nav_bar: ^5.0.2
   multiple_stream_builder: ^3.0.2
+  google_mlkit_text_recognition: ^0.5.0
+  camera: ^0.10.3+2
+  permission_handler: ^10.2.0
+
+
 
 flutter_icons:
  android: true

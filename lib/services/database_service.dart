@@ -33,7 +33,7 @@ class DatabaseService {
     String month,
     String year,
     int points,
-    bool ban,
+    bool ban, String ai,
   ) async {
     return await userCollection.doc(uid).set({
       "fullName": fullName,
@@ -56,6 +56,7 @@ class DatabaseService {
       "points": points,
       "ban": ban,
       "review": [],
+      "ai": ai,
     });
   }
 

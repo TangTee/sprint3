@@ -54,7 +54,7 @@ class AuthService {
     String day,
     String month,
     String year,
-    int points, bool ban,
+    int points, bool ban,String ai,
   ) async {
     try {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
@@ -79,7 +79,8 @@ class AuthService {
           month,
           year,
           points,
-          ban);
+          ban,
+          ai);
       return true;
     } on FirebaseAuthException catch (e) {
       return e.message;

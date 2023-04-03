@@ -18,6 +18,7 @@ class RegisnextPage extends StatefulWidget {
   final String password;
   final String Imageidcard;
   final String day;
+  final String ai;
   final String month;
   final String year;
   const RegisnextPage(
@@ -28,7 +29,8 @@ class RegisnextPage extends StatefulWidget {
       required this.Imageidcard,
       required this.day,
       required this.month,
-      required this.year})
+      required this.year,
+      required this.ai})
       : super(key: key);
 
   @override
@@ -86,6 +88,7 @@ class _RegisnextPageState extends State<RegisnextPage> {
   String get month => widget.month;
 
   String get year => widget.year;
+  String get ai => widget.ai;
 
   @override
   void setState(VoidCallback fn) {
@@ -369,7 +372,8 @@ class _RegisnextPageState extends State<RegisnextPage> {
               month,
               year,
               points,
-              ban)
+              ban,
+              ai)
           .then((value) async {
         if (value == true) {
           // saving the shared preference state
@@ -383,6 +387,7 @@ class _RegisnextPageState extends State<RegisnextPage> {
           await HelperFunctions.saveUserGenderSF(gender);
           await HelperFunctions.saveUserBioSF(bio);
 
+          // ignore: use_build_context_synchronously
           nextScreen(
               context,
               const MyHomePage(
