@@ -40,6 +40,7 @@ class _MyCommentState extends State<Comment> {
   var waitingLen = 0;
   bool isLoading = false;
   bool enable = false;
+  bool enable2 = false;
 
   @override
   void setState(VoidCallback fn) {
@@ -130,6 +131,7 @@ class _MyCommentState extends State<Comment> {
 
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
   final commentController = TextEditingController();
 
   @override
@@ -1222,7 +1224,7 @@ class _MyCommentState extends State<Comment> {
 
   void _showModalBottomSheet(BuildContext context, postidD, mytext) {
     _commentController.text = mytext['comment'].toString();
-    String Comment = '';
+    String comment = '';
 
     showModalBottomSheet(
       useRootNavigator: true,
@@ -1272,6 +1274,7 @@ class _MyCommentState extends State<Comment> {
                         builder: (context) => AlertDialog(
                               title: const Text('Edit Comment'),
                               content: Form(
+                                key: _formKey2,
                                 child: TextFormField(
                                   keyboardType: TextInputType.multiline,
                                   maxLines: 5,
@@ -1283,13 +1286,15 @@ class _MyCommentState extends State<Comment> {
                                   validator: (val) {
                                     if (val!.isNotEmpty) {
                                       return null;
-                                    } else {
-                                      return "plase Enter comment";
                                     }
+                                    if (val.isEmpty) {
+                                      return 'write something';
+                                    }
+                                    return null;
                                   },
                                   onChanged: (val) {
                                     setState(() {
-                                      Comment = val;
+                                      comment = val;
                                     });
                                   },
                                 ),
@@ -1304,24 +1309,29 @@ class _MyCommentState extends State<Comment> {
                                           TextStyle(color: mobileSearchColor),
                                     )),
                                 TextButton(
-                                    onPressed: (() {
-                                      FirebaseFirestore.instance
-                                          .collection('comments')
-                                          .doc(postidD)
-                                          .collection('comments')
-                                          .doc(mytext['cid'])
-                                          .update({
-                                        'cid': mytext['cid'],
-                                        'postid': mytext['postid'],
-                                        'uid': mytext['uid'],
-                                        'profile': mytext['profile'],
-                                        'Displayname': mytext['Displayname'],
-                                        'timeStamp': mytext['timeStamp'],
-                                        "comment": _commentController.text
-                                      }).whenComplete(() {
-                                        Navigator.of(context)
-                                            .popUntil((route) => route.isFirst);
-                                      });
+                                    onPressed: (() async {
+                                      if (_formKey2.currentState!.validate()) {
+                                        await FirebaseFirestore.instance
+                                            .collection('comments')
+                                            .doc(postidD)
+                                            .collection('comments')
+                                            .doc(mytext['cid'])
+                                            .update({
+                                          'cid': mytext['cid'],
+                                          'postid': mytext['postid'],
+                                          'uid': mytext['uid'],
+                                          'profile': mytext['profile'],
+                                          'Displayname': mytext['Displayname'],
+                                          'timeStamp': mytext['timeStamp'],
+                                          "comment": comment,
+                                        }).whenComplete(() {
+                                          Navigator.of(context).popUntil(
+                                              (route) => route.isFirst);
+                                          setState(() {
+                                            enable = false;
+                                          });
+                                        });
+                                      }
                                     }),
                                     child: const Text(
                                       'Save',
