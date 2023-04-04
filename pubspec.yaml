@@ -92,6 +92,8 @@ dependencies:
   google_mlkit_text_recognition: ^0.5.0
   camera: ^0.10.3+2
   permission_handler: ^10.2.0
+  pie_chart: ^5.3.2
+  percent_indicator: ^4.2.3
 
 
 

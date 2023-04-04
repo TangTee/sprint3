@@ -11,6 +11,9 @@ class DatabaseService {
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
 
+  final CollectionReference statisticsCollection =
+      FirebaseFirestore.instance.collection("statistics");
+
   final CollectionReference joinCollection =
       FirebaseFirestore.instance.collection("join");
 
@@ -33,7 +36,8 @@ class DatabaseService {
     String month,
     String year,
     int points,
-    bool ban, String ai,
+    bool ban,
+    String ai,
   ) async {
     return await userCollection.doc(uid).set({
       "fullName": fullName,
@@ -57,6 +61,12 @@ class DatabaseService {
       "ban": ban,
       "review": [],
       "ai": ai,
+    }).whenComplete(() {
+      statisticsCollection.doc(uid).set({
+        "uid": uid,
+        "Join": {},
+        "MyPost": {},
+      });
     });
   }
 
