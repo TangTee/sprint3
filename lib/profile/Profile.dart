@@ -11,6 +11,7 @@ import 'package:age_calculator/age_calculator.dart';
 import '../widgets/PostCard.dart';
 import '../widgets/ReviewCard.dart';
 import '../widgets/custom_textfield.dart';
+import 'U_stat.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -115,25 +116,48 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                title: const Center(
-                  child: Text(
-                    'Edit Profile',
-                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid,
-                      ),
+              if (userData['uid'] == FirebaseAuth.instance.currentUser!.uid)
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                  title: const Center(
+                    child: Text(
+                      'Edit Profile',
+                      style:
+                          TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
                     ),
-                  );
-                },
-              ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EditPage(
+                          uid: FirebaseAuth.instance.currentUser!.uid,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (userData['uid'] == FirebaseAuth.instance.currentUser!.uid)
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                  title: const Center(
+                    child: Text(
+                      'User statistics',
+                      style:
+                          TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => U_stat(
+                          uid: FirebaseAuth.instance.currentUser!.uid,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                 title: const Center(
