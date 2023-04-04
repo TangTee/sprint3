@@ -27,6 +27,11 @@ class _PostCardState extends State<CardWidget> {
   var currentUser = {};
   var joinLen = 0;
   bool isLoading = false;
+  var member = [];
+  var joinData = {};
+  var isJoin;
+  var history = [];
+  var waitingLen = 0;
 
   @override
   void setState(VoidCallback fn) {
@@ -71,6 +76,17 @@ class _PostCardState extends State<CardWidget> {
       postData = postSnap.data()!;
       userData = userSnap.data()!;
       currentUser = currentSnap.data()!;
+      joinData = joinSnap.data()!;
+      member = joinSnap.data()?['member'];
+      waitingLen = postSnap.data()!['waiting'].length;
+      history = postSnap.data()!['history'];
+      isJoin = history.every((history) {
+        if (history != FirebaseAuth.instance.currentUser!.uid) {
+          return true;
+        } else {
+          return false;
+        }
+      });
       setState(() {});
     } catch (e) {
       showSnackBar(
@@ -257,47 +273,75 @@ class _PostCardState extends State<CardWidget> {
                         ),
                       ],
                     ),
-                    Text.rich(
-                      TextSpan(
-                        children: <InlineSpan>[
-                          const TextSpan(
-                            text: '',
-                          ),
-                          const WidgetSpan(
-                            child: Icon(
-                              Icons.person_outline,
-                            ),
-                          ),
+                    Row(
+                      children: [
+                        Text.rich(
                           TextSpan(
-                            text:
-                                '\t\t$joinLen / ${widget.snap['peopleLimit']}',
-                            style: const TextStyle(
-                              fontFamily: 'MyCustomFont',
-                              color: unselected,
-                              fontSize: 14,
-                            ),
+                            children: <InlineSpan>[
+                              const TextSpan(
+                                text: '',
+                              ),
+                              const WidgetSpan(
+                                child: Icon(
+                                  Icons.person_outline,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    '\t\t$joinLen / ${widget.snap['peopleLimit']}',
+                                style: const TextStyle(
+                                  fontFamily: 'MyCustomFont',
+                                  color: unselected,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              FirebaseAuth.instance.currentUser!.uid ==
+                                          widget.snap['uid'] &&
+                                      widget.snap['open'] == true
+                                  ? waitingLen != 0
+                                      ? TextSpan(
+                                          text: '\t\t$waitingLen Request',
+                                          style: TextStyle(
+                                            fontFamily: 'MyCustomFont',
+                                            color: purple,
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      : const TextSpan()
+                                  : isJoin == false
+                                      ? const TextSpan(
+                                          text: '\t\tJoined',
+                                          style: TextStyle(
+                                            fontFamily: 'MyCustomFont',
+                                            color: green,
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      : const TextSpan(),
+                              if (joinLen.toString() ==
+                                  widget.snap['peopleLimit'])
+                                const TextSpan(
+                                  text: '\t\tFull',
+                                  style: TextStyle(
+                                    fontFamily: 'MyCustomFont',
+                                    color: redColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              if (joinLen ==
+                                  int.parse(widget.snap['peopleLimit']) - 1)
+                                const TextSpan(
+                                  text: '\t\t1 Last place',
+                                  style: TextStyle(
+                                    fontFamily: 'MyCustomFont',
+                                    color: redColor,
+                                    fontSize: 14,
+                                  ),
+                                )
+                            ],
                           ),
-                          if (joinLen.toString() == widget.snap['peopleLimit'])
-                            const TextSpan(
-                              text: '\t\tFull',
-                              style: TextStyle(
-                                fontFamily: 'MyCustomFont',
-                                color: redColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          if (joinLen ==
-                              int.parse(widget.snap['peopleLimit']) - 1)
-                            const TextSpan(
-                              text: '\t\t1 Last place',
-                              style: TextStyle(
-                                fontFamily: 'MyCustomFont',
-                                color: redColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     Row(
                       children: [
