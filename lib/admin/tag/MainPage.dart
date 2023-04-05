@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:math';
 
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:tangteevs/utils/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +9,10 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../widgets/custom_textfield.dart';
 import 'Category.dart';
 import 'hsv_picker.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -15,16 +21,73 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  String _ImageCategoryController = '';
+  File? media;
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
   final TextEditingController _CategoryController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
+  String ImageCategory = "";
 
   Color currentColor = purple;
   List<Color> colorHistory = [];
 
   void changeColor(Color color) => setState(() => currentColor = color);
+
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Future selectFilever2() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    print('${file?.path}');
+
+    if (file == null) return;
+    String getRandomString(int length) {
+      const characters =
+          '+-*=?AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
+      Random random = Random();
+      return String.fromCharCodes(Iterable.generate(length,
+          (_) => characters.codeUnitAt(random.nextInt(characters.length))));
+    }
+
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('category');
+    Reference referenceImageToUpload =
+        referenceDirImages.child(getRandomString(40));
+    try {
+      //Store the file
+      await referenceImageToUpload.putFile(File(file.path));
+      //Success: get the download URL
+      ImageCategory = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {
+      //Some error occurred
+    }
+    setState(() {
+      media = File(file.path);
+    });
+    print(ImageCategory);
+  }
+
+  Future uploadFile() async {
+    final path = 'img/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+    final snapshot = await uploadTask!.whenComplete(() => null);
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    print('Download linkL $urlDownload');
+  }
 
   Future<void> _create() async {
     Color pickerColor2;
@@ -44,6 +107,52 @@ class _MainPageState extends State<MainPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (pickedFile != null)
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(
+                          color: mobileSearchColor,
+                          width: 2,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                              width: 200,
+                              child: Image.file(
+                                File(pickedFile!.path!),
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )),
+                          ListTile(
+                            textColor: mobileSearchColor,
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 8.0),
+                            title: Center(
+                                child: Text(
+                              "Demo",
+                              style: const TextStyle(
+                                fontFamily: 'MyCustomFont',
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.center,
+                            )),
+                            onTap: () {},
+                          )
+                        ],
+                      ),
+                    ),
+                  GestureDetector(
+                    onTap: selectFilever2,
+                    child: SizedBox(
+                        height: 120,
+                        child: media != null
+                            ? Image.file(media!)
+                            : Image.asset('assets/images/id-card.png')),
+                  ),
                   TextField(
                     controller: _CategoryController,
                     decoration: textInputDecorationp.copyWith(
@@ -69,12 +178,14 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                       onPressed: () async {
+                        uploadFile;
                         final String Category = _CategoryController.text;
                         await categorysSet.set({
                           "Category": Category,
                           "color":
                               '#${currentColor.toString().substring(10, currentColor.toString().length - 1)}',
-                          "categoryId": categorysSet.id
+                          "categoryId": categorysSet.id,
+                          "categoryImage": ImageCategory
                         });
 
                         _CategoryController.text = '';
