@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:tangteevs/admin/tag/MainPage.dart';
 
 import '../utils/color.dart';
 
@@ -77,7 +78,10 @@ showModalBottomSheetC(BuildContext context) {
                           )),
                           onTap: () {
                             value = showModalBottomSheetT(
-                                context, Mytext['categoryId'], value);
+                                context,
+                                Mytext['categoryId'],
+                                Mytext['Category'],
+                                value);
                           },
                         ),
                       ],
@@ -106,7 +110,7 @@ showModalBottomSheetC(BuildContext context) {
   return value;
 }
 
-showModalBottomSheetT(BuildContext context, categoryId, value) {
+showModalBottomSheetT(BuildContext context, categoryId, Category, value) {
   final CollectionReference tags =
       FirebaseFirestore.instance.collection('tags');
 
@@ -146,6 +150,7 @@ showModalBottomSheetT(BuildContext context, categoryId, value) {
                               SizedBox(
                                 child: OutlinedButton(
                                   onPressed: () {
+                                    value['_category2'] = Category.toString();
                                     value['_tag2'] = Mytext['tag'].toString();
                                     value['_tag2Color'] =
                                         Mytext['tagColor'].toString();
