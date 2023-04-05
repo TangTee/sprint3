@@ -79,8 +79,11 @@ class _U_statState extends State<U_stat> {
       userData = userSnap.data()!;
       //postData = postSnapMy.data()!;
       postDataAll = postSnapAll.size;
-      postDataJoin = postSnapMy.size;
-      postDataJoin = postDataAll - postDataJoin;
+      postDataAll ??= 0;
+      postDataMy = postSnapMy.size;
+      postDataMy ??= 0;
+      postDataJoin = postDataAll - postDataMy;
+      postDataJoin ??= 0;
 
       setState(() {});
     } catch (e) {
@@ -149,7 +152,7 @@ class _U_statState extends State<U_stat> {
                               ),
                               child: SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.2,
+                                    MediaQuery.of(context).size.height * 0.14,
                                 child: Column(
                                   children: [
                                     const Text(
@@ -166,7 +169,7 @@ class _U_statState extends State<U_stat> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'All join ${postDataAll}',
+                                      'All join: ${postDataAll.toString()}',
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontFamily: 'MyCustomFont',
@@ -200,7 +203,7 @@ class _U_statState extends State<U_stat> {
                                                         .width *
                                                     0.43,
                                                 child: Text(
-                                                  'My post ${postDataJoin}',
+                                                  'My post: ${postDataMy.toString()}',
                                                   style: const TextStyle(
                                                     fontSize: 20,
                                                     fontFamily: 'MyCustomFont',
@@ -229,7 +232,7 @@ class _U_statState extends State<U_stat> {
                                                         .width *
                                                     0.43,
                                                 child: Text(
-                                                  'Join ${postDataJoin}',
+                                                  'Join: ${postDataJoin.toString()}',
                                                   style: const TextStyle(
                                                     fontSize: 20,
                                                     fontFamily: 'MyCustomFont',
