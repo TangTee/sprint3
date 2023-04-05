@@ -24,16 +24,23 @@ class U_stat extends StatefulWidget {
 class _U_statState extends State<U_stat> {
   var userData = {};
   var postData = {};
-  var cateData = {};
+  var cateData = [];
+  var cateDataC = [];
   var statData = {};
+  var postDataAll;
+  var postDataMy;
+  var postDataJoin;
+  final Map<String, double> count = {};
+  var postlen;
+  var catelen;
   bool isLoading = false;
   var colorList = <Color>[
-    HexColor('#f85ecb'),
-    HexColor('#6bc0db'),
-    HexColor('#030003'),
-    HexColor('#ff00fd'),
-    HexColor('#00e615'),
-    HexColor('#2da672'),
+    // HexColor('#f85ecb'),
+    // HexColor('#6bc0db'),
+    // HexColor('#030003'),
+    // HexColor('#ff00fd'),
+    // HexColor('#00e615'),
+    // HexColor('#2da672'),
   ];
 
   @override
@@ -59,13 +66,21 @@ class _U_statState extends State<U_stat> {
           .doc(widget.uid)
           .get();
 
-      var statSnap = await FirebaseFirestore.instance
-          .collection('statistics')
-          .doc(widget.uid)
+      var postSnapMy = await FirebaseFirestore.instance
+          .collection('post')
+          .where('uid', isEqualTo: widget.uid)
+          .get();
+
+      var postSnapAll = await FirebaseFirestore.instance
+          .collection('post')
+          .where('history', arrayContains: widget.uid)
           .get();
 
       userData = userSnap.data()!;
-      statData = statSnap.data()!;
+      //postData = postSnapMy.data()!;
+      postDataAll = postSnapAll.size;
+      postDataJoin = postSnapMy.size;
+      postDataJoin = postDataAll - postDataJoin;
 
       setState(() {});
     } catch (e) {
@@ -116,17 +131,29 @@ class _U_statState extends State<U_stat> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          // StreamBuilder<QuerySnapshot>(
-                          //     stream: FirebaseFirestore.instance
-                          //         .collection('categorys')
-                          //         .snapshots(),
-                          //     builder: (context,
-                          //         AsyncSnapshot<QuerySnapshot> snapshot) {
-                          //       if (snapshot.hasData) {
-                          //         colorList.insert(0, snapshot.data!.docs[index].get('color'));
-                          //       }
-                          //       return Text("data");
-                          //     }),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: SizedBox(
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    Text('Activity'),
+                                    Text('All join ${postDataAll}'),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 160),
+                                      child: Row(
+                                        children: [
+                                          Text('My post ${postDataJoin}'),
+                                          Text('Join ${postDataJoin}'),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                           Card(
                             child: Column(
                               children: [
@@ -138,7 +165,7 @@ class _U_statState extends State<U_stat> {
                                     lineHeight: 12.0,
                                     percent: userData['points'] / 100,
                                     center: Text(
-                                      userData['points'].toString() + '%',
+                                      '${userData['points']}%',
                                       style: const TextStyle(fontSize: 12.0),
                                     ),
                                     trailing: const Icon(Icons.mood),
@@ -150,34 +177,33 @@ class _U_statState extends State<U_stat> {
                               ],
                             ),
                           ),
-                          Container(
-                            height: 500,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: PieChart(
-                              dataMap:
-                                  Map<String, double>.from(statData['Join']),
-                              chartType: ChartType.ring,
-                              baseChartColor: unselected.withOpacity(0.15),
-                              colorList: colorList,
-                              chartValuesOptions: ChartValuesOptions(
-                                showChartValuesInPercentage: true,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 500,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: PieChart(
-                              dataMap:
-                                  Map<String, double>.from(statData['myPost']),
-                              chartType: ChartType.ring,
-                              baseChartColor: unselected.withOpacity(0.15),
-                              colorList: colorList,
-                              chartValuesOptions: ChartValuesOptions(
-                                showChartValuesInPercentage: true,
-                              ),
-                            ),
-                          ),
+                          // Container(
+                          //   height: 500,
+                          //   padding: EdgeInsets.symmetric(horizontal: 16),
+                          //   child: PieChart(
+                          //     dataMap: Map<String, double>.from(count),
+                          //     chartType: ChartType.ring,
+                          //     baseChartColor: unselected.withOpacity(0.15),
+                          //     colorList: colorList,
+                          //     chartValuesOptions: ChartValuesOptions(
+                          //       showChartValuesInPercentage: true,
+                          //     ),
+                          //   ),
+                          // ),
+                          // Container(
+                          //   height: 500,
+                          //   padding: EdgeInsets.symmetric(horizontal: 16),
+                          //   child: PieChart(
+                          //     dataMap:
+                          //         Map<String, double>.from(statData['myPost']),
+                          //     chartType: ChartType.ring,
+                          //     baseChartColor: unselected.withOpacity(0.15),
+                          //     colorList: colorList,
+                          //     chartValuesOptions: ChartValuesOptions(
+                          //       showChartValuesInPercentage: true,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -185,9 +211,15 @@ class _U_statState extends State<U_stat> {
           );
   }
 
-  // createColor() {
-  //   for (var i = 0; i < 7; i++) {
-  //     colorList.insert(0, '2');
-  //   }
-  // }
+  loadData(data, postlen) {
+    for (var i = 0; i <= catelen; i++) {
+      double count1 = 0.0;
+      for (var j = 0; j <= postlen; j++) {
+        if (data['category'] == cateData[i]) {
+          count1++;
+          count[cateData[i]] = count1;
+        }
+      }
+    }
+  }
 }
