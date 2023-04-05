@@ -22,12 +22,12 @@ showModalBottomSheetC(BuildContext context) {
             if (snapshot.hasData) {
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 2 / 2,
+                    maxCrossAxisExtent: 180,
+                    childAspectRatio: 1.4 / 2,
                     crossAxisSpacing: 30,
-                    mainAxisSpacing: 20),
+                    mainAxisSpacing: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                 itemCount: (snapshot.data! as dynamic).docs.length,
                 itemBuilder: (context, index) {
                   final DocumentSnapshot documentSnapshot =
@@ -37,29 +37,41 @@ showModalBottomSheetC(BuildContext context) {
                   Mytext['Category'] = documentSnapshot['Category'];
                   Mytext['categoryId'] = documentSnapshot['categoryId'];
                   Mytext['color'] = documentSnapshot['color'];
+                  Mytext['categoryImage'] = documentSnapshot['categoryImage'];
 
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      side: BorderSide(
-                        color: HexColor(Mytext['color']),
-                        width: 2,
-                      ),
-                    ),
+                  return Container(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            side: BorderSide(
+                              color: HexColor(Mytext['color']),
+                              width: 2,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                Mytext["categoryImage"],
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ],
+                          ),
+                        ),
                         ListTile(
                           textColor: mobileSearchColor,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
                           title: Center(
                               child: Text(
                             Mytext['Category'],
                             style: const TextStyle(
                               fontFamily: 'MyCustomFont',
-                              fontSize: 20,
+                              fontSize: 16,
                             ),
                             textAlign: TextAlign.center,
                           )),
@@ -67,7 +79,7 @@ showModalBottomSheetC(BuildContext context) {
                             value = showModalBottomSheetT(
                                 context, Mytext['categoryId'], value);
                           },
-                        )
+                        ),
                       ],
                     ),
                   );
