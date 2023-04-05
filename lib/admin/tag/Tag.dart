@@ -199,146 +199,156 @@ class _TagCategoryState extends State<TagCategory> {
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
-                        return SizedBox(
-                          height: 500,
-                          width: 600,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: SizedBox(
-                                  child: ListView.builder(
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder: (context, index) {
-                                        final DocumentSnapshot
-                                            documentSnapshot =
-                                            snapshot.data!.docs[index];
+                        return Container(
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: green,
+                                backgroundImage: NetworkImage(
+                                  widget.categoryId['categoryImage'].toString(),
+                                ),
+                                radius: 60,
+                              ),
+                              SizedBox(
+                                height: 500,
+                                width: 600,
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: SizedBox(
+                                        child: ListView.builder(
+                                            itemCount:
+                                                snapshot.data!.docs.length,
+                                            itemBuilder: (context, index) {
+                                              final DocumentSnapshot
+                                                  documentSnapshot =
+                                                  snapshot.data!.docs[index];
 
-                                        var Mytext = {};
-                                        Mytext['tag'] = documentSnapshot['tag'];
-                                        Mytext['tagColor'] =
-                                            documentSnapshot['tagColor'];
-                                        return Card(
-                                          elevation: 2,
-                                          child: ClipPath(
-                                            child: SizedBox(
-                                              height: 80,
-                                              child: Container(
-                                                child: Container(
-                                                  height: 80,
-                                                  decoration: BoxDecoration(
-                                                      border: Border(
-                                                          left: BorderSide(
-                                                              color: HexColor(
-                                                                  Mytext[
-                                                                      'tagColor']),
-                                                              width: 10))),
-                                                  child: ListTile(
-                                                    title: Text(Mytext['tag']),
-                                                    subtitle: Row(
-                                                      children: [
-                                                        Column(
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      top: 8.0),
-                                                              child: SizedBox(
-                                                                height: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.035,
-                                                                child:
-                                                                    OutlinedButton(
-                                                                  onPressed:
-                                                                      () {},
-                                                                  child: Text(
-                                                                    Mytext[
-                                                                        'tag'],
-                                                                    style: const TextStyle(
-                                                                        color:
-                                                                            mobileSearchColor),
-                                                                  ),
-                                                                  style: OutlinedButton.styleFrom(
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(
-                                                                              30)),
-                                                                      side: BorderSide(
-                                                                          color: HexColor(Mytext[
-                                                                              'tagColor']),
-                                                                          width:
-                                                                              2)),
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                    trailing:
-                                                        SingleChildScrollView(
-                                                      child: SizedBox(
-                                                          width: 100,
-                                                          child: Row(
+                                              var Mytext = {};
+                                              Mytext['tag'] =
+                                                  documentSnapshot['tag'];
+                                              Mytext['tagColor'] =
+                                                  documentSnapshot['tagColor'];
+                                              return Card(
+                                                elevation: 2,
+                                                child: ClipPath(
+                                                  child: SizedBox(
+                                                    height: 80,
+                                                    child: Container(
+                                                      child: Container(
+                                                        height: 80,
+                                                        decoration: BoxDecoration(
+                                                            border: Border(
+                                                                left: BorderSide(
+                                                                    color: HexColor(
+                                                                        Mytext[
+                                                                            'tagColor']),
+                                                                    width:
+                                                                        10))),
+                                                        child: ListTile(
+                                                          title: Text(
+                                                              Mytext['tag']),
+                                                          subtitle: Row(
                                                             children: [
-                                                              IconButton(
-                                                                icon: const Icon(
-                                                                    Icons.edit),
-                                                                onPressed: () =>
-                                                                    _update(
-                                                                        documentSnapshot
-                                                                            .id),
-                                                              ),
-                                                              IconButton(
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .delete),
-                                                                  onPressed: () =>
-                                                                      showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return AlertDialog(
-                                                                            title:
-                                                                                const Text('Are you sure?'),
-                                                                            content:
-                                                                                const Text('This action cannot be undone.'),
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                child: const Text('Cancel'),
-                                                                                onPressed: () {
-                                                                                  Navigator.of(context).pop();
-                                                                                },
-                                                                              ),
-                                                                              TextButton(
-                                                                                child: const Text('OK'),
-                                                                                onPressed: () {
-                                                                                  _delete(documentSnapshot.id);
-                                                                                  Navigator.of(context).pop();
-                                                                                },
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      )),
+                                                              Column(
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            8.0),
+                                                                    child:
+                                                                        SizedBox(
+                                                                      height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          0.035,
+                                                                      child:
+                                                                          OutlinedButton(
+                                                                        onPressed:
+                                                                            () {},
+                                                                        child:
+                                                                            Text(
+                                                                          Mytext[
+                                                                              'tag'],
+                                                                          style:
+                                                                              const TextStyle(color: mobileSearchColor),
+                                                                        ),
+                                                                        style: OutlinedButton.styleFrom(
+                                                                            shape:
+                                                                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                                                            side: BorderSide(color: HexColor(Mytext['tagColor']), width: 2)),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              )
                                                             ],
-                                                          )),
+                                                          ),
+                                                          trailing:
+                                                              SingleChildScrollView(
+                                                            child: SizedBox(
+                                                                width: 100,
+                                                                child: Row(
+                                                                  children: [
+                                                                    IconButton(
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .edit),
+                                                                      onPressed:
+                                                                          () =>
+                                                                              _update(documentSnapshot.id),
+                                                                    ),
+                                                                    IconButton(
+                                                                        icon: const Icon(Icons
+                                                                            .delete),
+                                                                        onPressed: () =>
+                                                                            showDialog(
+                                                                              context: context,
+                                                                              builder: (context) {
+                                                                                return AlertDialog(
+                                                                                  title: const Text('Are you sure?'),
+                                                                                  content: const Text('This action cannot be undone.'),
+                                                                                  actions: [
+                                                                                    TextButton(
+                                                                                      child: const Text('Cancel'),
+                                                                                      onPressed: () {
+                                                                                        Navigator.of(context).pop();
+                                                                                      },
+                                                                                    ),
+                                                                                    TextButton(
+                                                                                      child: const Text('OK'),
+                                                                                      onPressed: () {
+                                                                                        _delete(documentSnapshot.id);
+                                                                                        Navigator.of(context).pop();
+                                                                                      },
+                                                                                    ),
+                                                                                  ],
+                                                                                );
+                                                                              },
+                                                                            )),
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
+                                                  clipper: ShapeBorderClipper(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          3))),
                                                 ),
-                                              ),
-                                            ),
-                                            clipper: ShapeBorderClipper(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            3))),
-                                          ),
-                                          margin: const EdgeInsets.all(10),
-                                        );
-                                      }),
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
