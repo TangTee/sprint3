@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +51,7 @@ class _LoadTagState extends State<LoadTag> {
   late final String _tag = 'Tag';
   final _peopleLimit = TextEditingController();
   var _tag2;
+  var category;
   var valuee;
   var _tag2Color;
   String _enteredTextA = '';
@@ -179,7 +179,8 @@ class _LoadTagState extends State<LoadTag> {
                                   child: TextField(
                                     controller: dateController,
                                     decoration: textInputDecoration.copyWith(
-                                      prefixIcon: const Icon(Icons.calendar_month),
+                                      prefixIcon:
+                                          const Icon(Icons.calendar_month),
                                       labelStyle: const TextStyle(
                                         color: mobileSearchColor,
                                         fontFamily: "MyCustomFont",
@@ -228,7 +229,8 @@ class _LoadTagState extends State<LoadTag> {
                                             color: mobileSearchColor,
                                             fontFamily: "MyCustomFont",
                                           ),
-                                          disabledBorder: const OutlineInputBorder(
+                                          disabledBorder:
+                                              const OutlineInputBorder(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20.0)),
                                             borderSide: BorderSide(
@@ -511,6 +513,7 @@ class _LoadTagState extends State<LoadTag> {
                                     'history': [
                                       FirebaseAuth.instance.currentUser?.uid
                                     ],
+                                    'category': valuee['_category2'],
                                     'tag': valuee['_tag2'],
                                     'tagColor': valuee['_tag2Color'],
                                     'open': true,
