@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:tangteevs/feed/EditAct.dart';
+import 'package:tangteevs/pickers/block_picker.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,7 +16,15 @@ class detail extends StatefulWidget {
   String postid;
   String uid;
   String rid;
-  detail({Key? key, required this.postid, required this.uid, required this.rid})
+  bool post;
+  String problem;
+  detail(
+      {Key? key,
+      required this.postid,
+      required this.uid,
+      required this.rid,
+      required this.post,
+      required this.problem})
       : super(key: key);
 
   @override
@@ -864,36 +873,69 @@ class _detailState extends State<detail> {
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            color: white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            color: mobileBackgroundColor,
+                            child: Column(
                               children: [
-                                ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('users')
-                                          .doc(widget.uid)
-                                          .update({
-                                        "points": FieldValue.increment(-20),
-                                      });
-                                      FirebaseFirestore.instance
-                                          .collection('report')
-                                          .doc(widget.rid)
-                                          .delete();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('Yes')),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('report')
-                                          .doc(widget.rid)
-                                          .delete();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('No'))
+                                SizedBox(
+                                  child: widget.post
+                                      ? Text(
+                                          'This activity has been reported for : ' +
+                                              widget.problem,
+                                        )
+                                      : Text(
+                                          'This comment has been reported for :' +
+                                              widget.problem,
+                                        ),
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.01,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              redColor, // Background color
+                                        ),
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc(widget.uid)
+                                              .update({
+                                            "points": FieldValue.increment(-20),
+                                          });
+                                          FirebaseFirestore.instance
+                                              .collection('report')
+                                              .doc(widget.rid)
+                                              .delete();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'Yes',
+                                          style: TextStyle(
+                                            fontFamily: 'MyCustomFont',
+                                          ),
+                                        )),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              unselected, // Background color
+                                        ),
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('report')
+                                              .doc(widget.rid)
+                                              .delete();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('No'))
+                                  ],
+                                ),
                               ],
                             ),
                           ),
