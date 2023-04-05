@@ -110,13 +110,13 @@ class _U_statState extends State<U_stat> {
                   Navigator.pop(context);
                 },
               ),
-              toolbarHeight: MediaQuery.of(context).size.height * 0.13,
+              toolbarHeight: MediaQuery.of(context).size.height * 0.15,
               centerTitle: true,
               elevation: 0,
               title: const Text(
                 "\t\t\tUser\nStatistics",
                 style: TextStyle(
-                  fontSize: 46,
+                  fontSize: 45,
                   fontWeight: FontWeight.bold,
                   color: purple,
                 ),
@@ -132,20 +132,115 @@ class _U_statState extends State<U_stat> {
                       child: Column(
                         children: [
                           Card(
+                            clipBehavior: Clip.hardEdge,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: const BorderSide(
+                                color: unselected,
+                                width: 1,
+                              ),
+                            ),
+                            margin: const EdgeInsets.all(10),
                             child: Padding(
-                              padding: const EdgeInsets.all(15.0),
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                top: 10,
+                              ),
                               child: SizedBox(
-                                height: 100,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
                                 child: Column(
                                   children: [
-                                    Text('Activity'),
-                                    Text('All join ${postDataAll}'),
+                                    const Text(
+                                      'Activity',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontFamily: 'MyCustomFont',
+                                        color: mobileSearchColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'All join ${postDataAll}',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'MyCustomFont',
+                                        color: mobileSearchColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 160),
+                                      padding: const EdgeInsets.only(
+                                        top: 10,
+                                        bottom: 10,
+                                        right: 10,
+                                      ),
                                       child: Row(
                                         children: [
-                                          Text('My post ${postDataJoin}'),
-                                          Text('Join ${postDataJoin}'),
+                                          Column(
+                                            children: [
+                                              Container(
+                                                decoration: const BoxDecoration(
+                                                  //color: green,
+                                                  border: Border(
+                                                    right: BorderSide(
+                                                      color: lightPurple,
+                                                      width: 2,
+                                                    ),
+                                                  ),
+                                                ),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.43,
+                                                child: Text(
+                                                  'My post ${postDataJoin}',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'MyCustomFont',
+                                                    color: mobileSearchColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Container(
+                                                decoration: const BoxDecoration(
+                                                  //color: purple,
+                                                  border: Border(
+                                                    left: BorderSide(
+                                                      color: lightPurple,
+                                                      width: 2,
+                                                    ),
+                                                  ),
+                                                ),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.43,
+                                                child: Text(
+                                                  'Join ${postDataJoin}',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'MyCustomFont',
+                                                    color: mobileSearchColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -155,14 +250,40 @@ class _U_statState extends State<U_stat> {
                             ),
                           ),
                           Card(
+                            clipBehavior: Clip.hardEdge,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: const BorderSide(
+                                color: unselected,
+                                width: 1,
+                              ),
+                            ),
+                            margin: const EdgeInsets.all(10),
                             child: Column(
                               children: [
-                                const Text('User Point'),
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15.0,
+                                    top: 10,
+                                  ),
+                                ),
+                                const Text(
+                                  'User Point',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'MyCustomFont',
+                                    fontWeight: FontWeight.bold,
+                                    color: mobileSearchColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: LinearPercentIndicator(
-                                    width: 140.0,
-                                    lineHeight: 12.0,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    lineHeight: 15.0,
                                     percent: userData['points'] / 100,
                                     center: Text(
                                       '${userData['points']}%',
