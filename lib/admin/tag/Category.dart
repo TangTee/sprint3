@@ -191,67 +191,71 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ),
             ),
           ),
-          child: ListTile(
-            title: Text(widget.snap['Category']),
-            subtitle: Text(widget.snap['color']),
-            trailing: SingleChildScrollView(
-              child: SizedBox(
-                width: 160,
-                child: Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                TagCategory(categoryId: widget.snap),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(widget.snap['Category']),
+                subtitle: Text(widget.snap['color']),
+                trailing: SingleChildScrollView(
+                  child: SizedBox(
+                    width: 160,
+                    child: Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TagCategory(categoryId: widget.snap),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            '+',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontFamily: 'MyCustomFont',
+                              color: unselected,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        );
-                      },
-                      child: const Text(
-                        '+',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontFamily: 'MyCustomFont',
-                          color: unselected,
-                          fontWeight: FontWeight.bold,
                         ),
-                      ),
+                        IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () => _update(widget.snap.id)),
+                        IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text('Are you sure?'),
+                                      content:
+                                          Text('This action cannot be undone.'),
+                                      actions: [
+                                        TextButton(
+                                          child: Text('Cancel'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            _delete(widget.snap.id);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )),
+                      ],
                     ),
-                    IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => _update(widget.snap.id)),
-                    IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Are you sure?'),
-                                  content:
-                                      Text('This action cannot be undone.'),
-                                  actions: [
-                                    TextButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text('OK'),
-                                      onPressed: () {
-                                        _delete(widget.snap.id);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            )),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
         clipper: ShapeBorderClipper(
