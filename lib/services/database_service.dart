@@ -61,12 +61,6 @@ class DatabaseService {
       "ban": ban,
       "review": [],
       "ai": ai,
-    }).whenComplete(() {
-      statisticsCollection.doc(uid).set({
-        "uid": uid,
-        "Join": {},
-        "MyPost": {},
-      });
     });
   }
 
