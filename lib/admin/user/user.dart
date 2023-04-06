@@ -118,17 +118,7 @@ class _UserPageState extends State<UserPage> {
                   nextScreenReplaceOut(context, const LandingPage());
                 },
               ),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     // await service.showNotification(
-              //     //     id: 0,
-              //     //     title: 'Notification Title',
-              //     //     body: 'Some body');
-              //     // String? fcmKey = await getFcmToken();
-              //     // print('FCM Key: $fcmKey');
-              //   },
-              //   child: const Text("Item 1"),
-              // ),
+
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
                 title: const Center(
@@ -197,7 +187,7 @@ class _UserPageState extends State<UserPage> {
         body: TabBarView(
           children: [
             VerifyPage(),
-            SearchData(),
+            UserCardPage(),
           ],
         ),
       ),
