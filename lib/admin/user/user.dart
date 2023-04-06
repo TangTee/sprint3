@@ -29,6 +29,13 @@ class _UserPageState extends State<UserPage> {
     super.initState();
   }
 
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void listenToNotification() =>
       service.onNotificationClick.stream.listen(onNoticationListener);
 
