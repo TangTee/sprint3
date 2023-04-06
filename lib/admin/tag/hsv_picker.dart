@@ -30,6 +30,13 @@ class HSVColorPicker extends StatefulWidget {
 
 class _HSVColorPickerState extends State<HSVColorPicker> {
   @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
