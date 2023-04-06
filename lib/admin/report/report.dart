@@ -19,6 +19,13 @@ final CollectionReference _report =
     FirebaseFirestore.instance.collection('report');
 
 class _ReportPageState extends State<ReportPage> {
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       useRootNavigator: true,
