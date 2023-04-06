@@ -20,6 +20,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   String _ImageCategoryController = '';
   File? media;
   final CollectionReference _categorys =
