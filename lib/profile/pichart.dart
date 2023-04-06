@@ -15,14 +15,14 @@ class PichartRender extends StatefulWidget {
   final String uid;
   final List cateData;
   final int catelen;
-  final List<Color> colorList;
+  final List colorList;
 
   PichartRender(
       {Key? key,
       required this.uid,
       required List this.cateData,
       required this.catelen,
-      required List<Color> this.colorList})
+      required List this.colorList})
       : super(key: key);
 
   @override
@@ -32,13 +32,6 @@ class PichartRender extends StatefulWidget {
 class _PichartRenderState extends State<PichartRender> {
   bool isLoading = false;
   var cusLen = 0.0;
-  final colorList = <Color>[
-    const Color(0xfffdcb6e),
-    const Color(0xff0984e3),
-    const Color(0xfffd79a8),
-    const Color(0xffe17055),
-    const Color(0xff6c5ce7),
-  ];
   var count = {};
 
   @override
@@ -97,8 +90,8 @@ class _PichartRenderState extends State<PichartRender> {
             dataMap: Map<String, double>.from(count),
             chartType: ChartType.ring,
             baseChartColor: unselected.withOpacity(0.15),
-            colorList: colorList,
-            chartValuesOptions: ChartValuesOptions(
+            colorList: List<Color>.from(widget.colorList),
+            chartValuesOptions: const ChartValuesOptions(
               showChartValuesInPercentage: true,
             ),
           ),
