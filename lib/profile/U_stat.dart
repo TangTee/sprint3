@@ -28,15 +28,13 @@ class _U_statState extends State<U_stat> {
   var cateData = [];
   var cusLen = [];
   var cateDataC = [];
-  var colorList2 = [];
   var postDataAll;
   var postDataMy;
   var postDataJoin;
   var count = {};
-  var postlen;
   var catelen;
   bool isLoading = false;
-  var colorList = <Color>[
+  var colorList = [
     // HexColor('#f85ecb'),
     // HexColor('#6bc0db'),
     // HexColor('#030003'),
@@ -94,9 +92,8 @@ class _U_statState extends State<U_stat> {
       }
 
       cateData = cateSnap.docs.map((doc) => doc.data()['Category']).toList();
-      colorList2 = cateSnap.docs.map((doc) => doc.data()['color']).toList();
+      colorList = cateSnap.docs.map((doc) => doc.data()['color']).toList();
       catelen = cateData.length;
-      colorList = List<Color>.from(colorList2);
 
       setState(() {});
     } catch (e) {
@@ -130,7 +127,7 @@ class _U_statState extends State<U_stat> {
               centerTitle: true,
               elevation: 0,
               title: const Text(
-                "\t\t\tUser\nStatistics",
+                "\t\t\t\t\tUser\nStatistics",
                 style: TextStyle(
                   fontSize: 45,
                   fontWeight: FontWeight.bold,
@@ -176,23 +173,83 @@ class _U_statState extends State<U_stat> {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: LinearPercentIndicator(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    lineHeight: 15.0,
-                                    percent: userData['points'] / 100,
-                                    center: Text(
-                                      '${userData['points']}%',
-                                      style: const TextStyle(fontSize: 12.0),
+                                if (userData['points'] >= 80)
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      lineHeight: 15.0,
+                                      percent: userData['points'] / 100,
+                                      center: Text(
+                                        '${userData['points']}%',
+                                        style: const TextStyle(fontSize: 12.0),
+                                      ),
+                                      trailing: const Icon(Icons.mood),
+                                      barRadius: const Radius.circular(16),
+                                      backgroundColor: unselected,
+                                      progressColor: green,
                                     ),
-                                    trailing: const Icon(Icons.mood),
-                                    barRadius: const Radius.circular(16),
-                                    backgroundColor: unselected,
-                                    progressColor: green,
                                   ),
-                                ),
+                                if (userData['points'] < 80 &&
+                                    userData['points'] >= 50)
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      lineHeight: 15.0,
+                                      percent: userData['points'] / 100,
+                                      center: Text(
+                                        '${userData['points']}%',
+                                        style: const TextStyle(fontSize: 12.0),
+                                      ),
+                                      trailing:
+                                          const Icon(Icons.sentiment_satisfied),
+                                      barRadius: const Radius.circular(16),
+                                      backgroundColor: unselected,
+                                      progressColor: HexColor('#FFD93D'),
+                                    ),
+                                  ),
+                                if (userData['points'] < 50 &&
+                                    userData['points'] >= 30)
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      lineHeight: 15.0,
+                                      percent: userData['points'] / 100,
+                                      center: Text(
+                                        '${userData['points']}%',
+                                        style: const TextStyle(fontSize: 12.0),
+                                      ),
+                                      trailing: const Icon(
+                                          Icons.sentiment_dissatisfied),
+                                      barRadius: const Radius.circular(16),
+                                      backgroundColor: unselected,
+                                      progressColor: HexColor('#FF8400'),
+                                    ),
+                                  ),
+                                if (userData['points'] < 30)
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      lineHeight: 15.0,
+                                      percent: userData['points'] / 100,
+                                      center: Text(
+                                        '${userData['points']}%',
+                                        style: const TextStyle(fontSize: 12.0),
+                                      ),
+                                      trailing: const Icon(
+                                          Icons.sentiment_very_dissatisfied),
+                                      barRadius: const Radius.circular(16),
+                                      backgroundColor: unselected,
+                                      progressColor: HexColor('#E21818'),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
