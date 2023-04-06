@@ -116,7 +116,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-              if (userData['uid'] == FirebaseAuth.instance.currentUser!.uid)
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                   title: const Center(
@@ -137,7 +136,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-              if (userData['uid'] == FirebaseAuth.instance.currentUser!.uid)
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                   title: const Center(
