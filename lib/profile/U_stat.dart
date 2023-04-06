@@ -28,20 +28,13 @@ class _U_statState extends State<U_stat> {
   var cateData = [];
   var cusLen = [];
   var cateDataC = [];
+  var colorListR = <HexColor>[];
   var postDataAll;
   var postDataMy;
   var postDataJoin;
-  var count = {};
   var catelen;
+  var colorList = [];
   bool isLoading = false;
-  var colorList = [
-    // HexColor('#f85ecb'),
-    // HexColor('#6bc0db'),
-    // HexColor('#030003'),
-    // HexColor('#ff00fd'),
-    // HexColor('#00e615'),
-    // HexColor('#2da672'),
-  ];
 
   @override
   void setState(VoidCallback fn) {
@@ -79,7 +72,6 @@ class _U_statState extends State<U_stat> {
       var cateSnap =
           await FirebaseFirestore.instance.collection('categorys').get();
 
-      cateData = cateSnap.docs.map((doc) => doc.data()['Category']).toList();
       userData = userSnap.data()!;
 
       postDataAll = postSnapAll.size;
@@ -94,6 +86,10 @@ class _U_statState extends State<U_stat> {
       cateData = cateSnap.docs.map((doc) => doc.data()['Category']).toList();
       colorList = cateSnap.docs.map((doc) => doc.data()['color']).toList();
       catelen = cateData.length;
+
+      for (var i = 0; i < catelen; i++) {
+        colorListR.add(HexColor(await colorList.elementAt(i)));
+      }
 
       setState(() {});
     } catch (e) {
@@ -120,6 +116,7 @@ class _U_statState extends State<U_stat> {
                 icon: const Icon(Icons.arrow_back_ios,
                     color: mobileSearchColor, size: 30),
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.pop(context);
                 },
               ),
@@ -375,7 +372,7 @@ class _U_statState extends State<U_stat> {
                               uid: widget.uid,
                               cateData: cateData,
                               catelen: catelen,
-                              colorList: colorList),
+                              colorList: colorListR),
                         ],
                       ),
                     ),
