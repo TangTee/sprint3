@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:tangteevs/profile/pichart.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -25,12 +26,13 @@ class _U_statState extends State<U_stat> {
   var userData = {};
   var postData = {};
   var cateData = [];
+  var cusLen = [];
   var cateDataC = [];
-  var statData = {};
+  var colorList2 = [];
   var postDataAll;
   var postDataMy;
   var postDataJoin;
-  final Map<String, double> count = {};
+  var count = {};
   var postlen;
   var catelen;
   bool isLoading = false;
@@ -76,14 +78,25 @@ class _U_statState extends State<U_stat> {
           .where('history', arrayContains: widget.uid)
           .get();
 
+      var cateSnap =
+          await FirebaseFirestore.instance.collection('categorys').get();
+
+      cateData = cateSnap.docs.map((doc) => doc.data()['Category']).toList();
       userData = userSnap.data()!;
-      //postData = postSnapMy.data()!;
+
       postDataAll = postSnapAll.size;
       postDataAll ??= 0;
       postDataMy = postSnapMy.size;
       postDataMy ??= 0;
       postDataJoin = postDataAll - postDataMy;
-      postDataJoin ??= 0;
+      if (postDataJoin < 1) {
+        postDataJoin = 0;
+      }
+
+      cateData = cateSnap.docs.map((doc) => doc.data()['Category']).toList();
+      colorList2 = cateSnap.docs.map((doc) => doc.data()['color']).toList();
+      catelen = cateData.length;
+      colorList = List<Color>.from(colorList2);
 
       setState(() {});
     } catch (e) {
@@ -145,6 +158,55 @@ class _U_statState extends State<U_stat> {
                               ),
                             ),
                             margin: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15.0,
+                                    top: 10,
+                                  ),
+                                ),
+                                const Text(
+                                  'User Point',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'MyCustomFont',
+                                    fontWeight: FontWeight.bold,
+                                    color: mobileSearchColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: LinearPercentIndicator(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    lineHeight: 15.0,
+                                    percent: userData['points'] / 100,
+                                    center: Text(
+                                      '${userData['points']}%',
+                                      style: const TextStyle(fontSize: 12.0),
+                                    ),
+                                    trailing: const Icon(Icons.mood),
+                                    barRadius: const Radius.circular(16),
+                                    backgroundColor: unselected,
+                                    progressColor: green,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Card(
+                            clipBehavior: Clip.hardEdge,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: const BorderSide(
+                                color: unselected,
+                                width: 1,
+                              ),
+                            ),
+                            margin: const EdgeInsets.all(10),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                 left: 15.0,
@@ -169,7 +231,7 @@ class _U_statState extends State<U_stat> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'All join: ${postDataAll.toString()}',
+                                      'All activity: ${postDataAll.toString()}',
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontFamily: 'MyCustomFont',
@@ -252,98 +314,15 @@ class _U_statState extends State<U_stat> {
                               ),
                             ),
                           ),
-                          Card(
-                            clipBehavior: Clip.hardEdge,
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              side: const BorderSide(
-                                color: unselected,
-                                width: 1,
-                              ),
-                            ),
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 15.0,
-                                    top: 10,
-                                  ),
-                                ),
-                                const Text(
-                                  'User Point',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: 'MyCustomFont',
-                                    fontWeight: FontWeight.bold,
-                                    color: mobileSearchColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: LinearPercentIndicator(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    lineHeight: 15.0,
-                                    percent: userData['points'] / 100,
-                                    center: Text(
-                                      '${userData['points']}%',
-                                      style: const TextStyle(fontSize: 12.0),
-                                    ),
-                                    trailing: const Icon(Icons.mood),
-                                    barRadius: const Radius.circular(16),
-                                    backgroundColor: unselected,
-                                    progressColor: green,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Container(
-                          //   height: 500,
-                          //   padding: EdgeInsets.symmetric(horizontal: 16),
-                          //   child: PieChart(
-                          //     dataMap: Map<String, double>.from(count),
-                          //     chartType: ChartType.ring,
-                          //     baseChartColor: unselected.withOpacity(0.15),
-                          //     colorList: colorList,
-                          //     chartValuesOptions: ChartValuesOptions(
-                          //       showChartValuesInPercentage: true,
-                          //     ),
-                          //   ),
-                          // ),
-                          // Container(
-                          //   height: 500,
-                          //   padding: EdgeInsets.symmetric(horizontal: 16),
-                          //   child: PieChart(
-                          //     dataMap:
-                          //         Map<String, double>.from(statData['myPost']),
-                          //     chartType: ChartType.ring,
-                          //     baseChartColor: unselected.withOpacity(0.15),
-                          //     colorList: colorList,
-                          //     chartValuesOptions: ChartValuesOptions(
-                          //       showChartValuesInPercentage: true,
-                          //     ),
-                          //   ),
-                          // ),
+                          PichartRender(
+                              uid: widget.uid,
+                              cateData: cateData,
+                              catelen: catelen,
+                              colorList: colorList),
                         ],
                       ),
                     ),
                   ),
           );
-  }
-
-  loadData(data, postlen) {
-    for (var i = 0; i <= catelen; i++) {
-      double count1 = 0.0;
-      for (var j = 0; j <= postlen; j++) {
-        if (data['category'] == cateData[i]) {
-          count1++;
-          count[cateData[i]] = count1;
-        }
-      }
-    }
   }
 }
