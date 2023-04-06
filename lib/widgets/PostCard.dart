@@ -241,17 +241,7 @@ class _PostCardState extends State<CardWidget> {
                                         fontSize: 14,
                                       ),
                                     )
-                                  : widget.snap['waiting'].contains(FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                      ? const TextSpan(
-                                          text: '\t\tWaiting',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontFamily: 'MyCustomFont',
-                                            color: purple,
-                                          ),
-                                        )
-                                      : const TextSpan(),
+                                  : const TextSpan(),
                         ],
                       ),
                     ),
