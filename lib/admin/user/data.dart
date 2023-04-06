@@ -18,6 +18,13 @@ class _SearchUserState extends State<SearchData> {
   bool theme = false;
 
   @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
   }
