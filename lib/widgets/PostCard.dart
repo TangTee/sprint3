@@ -217,6 +217,41 @@ class _PostCardState extends State<CardWidget> {
                               fontSize: 14,
                             ),
                           ),
+                          FirebaseAuth.instance.currentUser!.uid ==
+                                      widget.snap['uid'] &&
+                                  widget.snap['open'] == true
+                              ? waitingLen != 0
+                                  ? TextSpan(
+                                      text: '\t\t$waitingLen Request',
+                                      style: TextStyle(
+                                        fontFamily: 'MyCustomFont',
+                                        color: purple,
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  : const TextSpan()
+                              : isJoin == false &&
+                                      joinLen.toString() !=
+                                          widget.snap['peopleLimit']
+                                  ? const TextSpan(
+                                      text: '\t\tJoined',
+                                      style: TextStyle(
+                                        fontFamily: 'MyCustomFont',
+                                        color: green,
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  : widget.snap['waiting'].contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? const TextSpan(
+                                          text: '\t\tWaiting',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'MyCustomFont',
+                                            color: purple,
+                                          ),
+                                        )
+                                      : const TextSpan(),
                         ],
                       ),
                     ),
@@ -295,29 +330,6 @@ class _PostCardState extends State<CardWidget> {
                                   fontSize: 14,
                                 ),
                               ),
-                              FirebaseAuth.instance.currentUser!.uid ==
-                                          widget.snap['uid'] &&
-                                      widget.snap['open'] == true
-                                  ? waitingLen != 0
-                                      ? TextSpan(
-                                          text: '\t\t$waitingLen Request',
-                                          style: TextStyle(
-                                            fontFamily: 'MyCustomFont',
-                                            color: purple,
-                                            fontSize: 14,
-                                          ),
-                                        )
-                                      : const TextSpan()
-                                  : isJoin == false
-                                      ? const TextSpan(
-                                          text: '\t\tJoined',
-                                          style: TextStyle(
-                                            fontFamily: 'MyCustomFont',
-                                            color: green,
-                                            fontSize: 14,
-                                          ),
-                                        )
-                                      : const TextSpan(),
                               if (joinLen.toString() ==
                                   widget.snap['peopleLimit'])
                                 const TextSpan(
