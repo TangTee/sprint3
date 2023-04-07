@@ -221,8 +221,8 @@ class _PostCardState extends State<CardWidget> {
                                       widget.snap['uid'] &&
                                   widget.snap['open'] == true
                               ? waitingLen != 0
-                                  ? TextSpan(
-                                      text: '\t\t$waitingLen Request',
+                                  ? const TextSpan(
+                                      text: '\t\tNew Request',
                                       style: TextStyle(
                                         fontFamily: 'MyCustomFont',
                                         color: purple,
@@ -330,8 +330,11 @@ class _PostCardState extends State<CardWidget> {
                                     fontSize: 14,
                                   ),
                                 ),
-                              if (joinLen ==
-                                  int.parse(widget.snap['peopleLimit']) - 1)
+                              if (FirebaseAuth.instance.currentUser!.uid !=
+                                      widget.snap['uid'] &&
+                                  widget.snap['open'] == true &&
+                                  joinLen ==
+                                      int.parse(widget.snap['peopleLimit']) - 1)
                                 const TextSpan(
                                   text: '\t\t1 Last place',
                                   style: TextStyle(
