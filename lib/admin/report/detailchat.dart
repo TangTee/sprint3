@@ -168,52 +168,69 @@ class _DetailChatState extends State<DetailChat> {
                   child: Container(
                     height: replyMessage != ''
                         ? MediaQuery.of(context).size.height * 0.135
-                        : MediaQuery.of(context).size.height * 0.075,
-                    color: white,
+                        : MediaQuery.of(context).size.height * 0.1,
+                    color: mobileBackgroundColor,
                     child: Form(
                       child: Column(
                         children: [
                           SizedBox(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10.0, top: 5),
+                              child: Text(
+                                'This messages in chat deserve to be reported',
+                              ),
+                            ),
+                          ),
+                          SizedBox(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          redColor, // Background color
-                                    ),
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('users')
-                                          .doc(widget.userName)
-                                          .update({
-                                        "points": FieldValue.increment(-20),
-                                      });
-                                      FirebaseFirestore.instance
-                                          .collection('report')
-                                          .doc(widget.rid)
-                                          .delete();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Yes',
-                                      style: TextStyle(
-                                        fontFamily: 'MyCustomFont',
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 90.0, top: 5),
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            redColor, // Background color
                                       ),
-                                    )),
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          unselected, // Background color
-                                    ),
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('report')
-                                          .doc(widget.rid)
-                                          .delete();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('No'))
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(widget.userName)
+                                            .update({
+                                          "points": FieldValue.increment(-20),
+                                        });
+                                        FirebaseFirestore.instance
+                                            .collection('report')
+                                            .doc(widget.rid)
+                                            .delete();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Yes',
+                                        style: TextStyle(
+                                          fontFamily: 'MyCustomFont',
+                                        ),
+                                      )),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 90.0, top: 5),
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            unselected, // Background color
+                                      ),
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('report')
+                                            .doc(widget.rid)
+                                            .delete();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('No')),
+                                )
                               ],
                             ),
                           ),
