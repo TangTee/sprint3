@@ -136,10 +136,26 @@ class _ReportPageState extends State<ReportPage> {
                 fontSize: 20.0,
                 fontFamily: 'MyCustomFont'), //For Un-selected Tabs
             tabs: [
-              Tab(text: 'Post'),
-              Tab(text: 'Comment'),
-              Tab(text: 'Chat'),
-              Tab(text: 'Users'),
+              Tab(
+                icon: Icon(
+                  Icons.list,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.insert_comment,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.question_answer,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.person,
+                ),
+              ),
             ],
           ),
         ),
@@ -261,11 +277,6 @@ class Post extends StatelessWidget {
             );
           },
         ),
-// Add new users
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => _create(),
-        //   child: const Icon(Icons.add),
-        // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 }
@@ -378,11 +389,6 @@ class Comment extends StatelessWidget {
               );
             },
           ),
-          // Add new users
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () => _create(),
-          //   child: const Icon(Icons.add),
-          // ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat),
     );
@@ -394,116 +400,122 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: mobileBackgroundColor,
-        body: StreamBuilder(
-          stream: _report.where('type', isEqualTo: 'chat').snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return ListView.builder(
-                itemCount: streamSnapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      streamSnapshot.data!.docs[index];
-                  return Card(
-                    clipBehavior: Clip.hardEdge,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      side: const BorderSide(
-                        color: unselected,
-                        width: 1,
+    return SafeArea(
+      child: Scaffold(
+          backgroundColor: mobileBackgroundColor,
+          body: StreamBuilder(
+            stream: _report.where('type', isEqualTo: 'chat').snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              if (streamSnapshot.hasData) {
+                return ListView.builder(
+                  itemCount: streamSnapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot documentSnapshot =
+                        streamSnapshot.data!.docs[index];
+                    return Card(
+                      clipBehavior: Clip.hardEdge,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: const BorderSide(
+                          color: unselected,
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    margin: const EdgeInsets.all(10),
-                    child: SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15.00, top: 10),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: InkWell(
-                            onTap: () {
-                              PersistentNavBarNavigator.pushNewScreen(
-                                context,
-                                screen: DetailChat(
-                                  groupId: documentSnapshot['groupid'],
-                                  groupName: documentSnapshot['Displayname'],
-                                  userName: documentSnapshot['uid'],
-                                  rid: documentSnapshot['rid'],
-                                ),
-                                withNavBar: false,
-                                pageTransitionAnimation: PageTransitionAnimation
-                                    .cupertino, // OPTIONAL VALUE. True by default.
-                              );
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.9,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
-                                      child: MessagePreviewWidget(
-                                        uid: documentSnapshot['uid'],
-                                        messageTitle:
-                                            documentSnapshot['Displayname'],
-                                        messageContent:
-                                            documentSnapshot['text'],
-                                        messageTime:
-                                            documentSnapshot['timeStamp']
-                                                .toString(),
-                                        timer: true,
-                                        messageImage: documentSnapshot['uid'],
-                                        isunread: false,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              0.1,
-                                      child: Text(
-                                        documentSnapshot['problem'],
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: 'MyCustomFont',
-                                          color: unselected,
+                      margin: const EdgeInsets.all(10),
+                      child: SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.00, top: 10),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: InkWell(
+                              onTap: () {
+                                PersistentNavBarNavigator.pushNewScreen(
+                                  context,
+                                  screen: DetailChat(
+                                    groupId: documentSnapshot['groupid'],
+                                    groupName: documentSnapshot['Displayname'],
+                                    userName: documentSnapshot['uid'],
+                                    rid: documentSnapshot['rid'],
+                                  ),
+                                  withNavBar: false,
+                                  pageTransitionAnimation: PageTransitionAnimation
+                                      .cupertino, // OPTIONAL VALUE. True by default.
+                                );
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.1,
+                                        child: MessagePreviewWidget(
+                                          uid: documentSnapshot['uid'],
+                                          messageTitle:
+                                              documentSnapshot['Displayname'],
+                                          messageContent:
+                                              documentSnapshot['text'],
+                                          messageTime:
+                                              documentSnapshot['timeStamp']
+                                                  .toString(),
+                                          timer: true,
+                                          messageImage: documentSnapshot['uid'],
+                                          isunread: false,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.1,
+                                          child: Text(
+                                            documentSnapshot['problem'],
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontFamily: 'MyCustomFont',
+                                              color: unselected,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
-            }
+                    );
+                  },
+                );
+              }
 
-            return const Center(
-              child: Text('no data yet'),
-            );
-          },
-        ),
-// Add new users
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => _create(),
-        //   child: const Icon(Icons.add),
-        // ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+              return const Center(
+                child: Text('no data yet'),
+              );
+            },
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat),
+    );
   }
 }
 
@@ -512,139 +524,157 @@ class Users extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: mobileBackgroundColor,
-        body: StreamBuilder(
-          stream: _report.where('type', isEqualTo: 'people').snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return ListView.builder(
-                itemCount: streamSnapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      streamSnapshot.data!.docs[index];
-                  void _showModalBottomSheet(BuildContext context) {
-                    showModalBottomSheet(
-                      useRootNavigator: true,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              redColor, // Background color
-                                        ),
-                                        onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(documentSnapshot['uid'])
-                                              .update({
-                                            "points": FieldValue.increment(-20),
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection('report')
-                                              .doc(documentSnapshot['rid'])
-                                              .delete();
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          'Yes',
-                                          style: TextStyle(
-                                            fontFamily: 'MyCustomFont',
-                                          ),
-                                        )),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              unselected, // Background color
-                                        ),
-                                        onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('report')
-                                              .doc(documentSnapshot['rid'])
-                                              .delete();
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('No'))
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }
-
-                  return Card(
-                    clipBehavior: Clip.hardEdge,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      side: const BorderSide(
-                        color: unselected,
-                        width: 1,
-                      ),
-                    ),
-                    margin: const EdgeInsets.all(10),
-                    child: SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15.00, top: 10),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: InkWell(
-                            onTap: () {
-                              _showModalBottomSheet(context);
-                            },
+    return SafeArea(
+      child: Scaffold(
+          backgroundColor: mobileBackgroundColor,
+          body: StreamBuilder(
+            stream: _report.where('type', isEqualTo: 'people').snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              if (streamSnapshot.hasData) {
+                return ListView.builder(
+                  itemCount: streamSnapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot documentSnapshot =
+                        streamSnapshot.data!.docs[index];
+                    void _showModalBottomSheet(BuildContext context) {
+                      showModalBottomSheet(
+                        useRootNavigator: true,
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        )),
+                        builder: (BuildContext context) {
+                          return Container(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.9,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
-                                      child: UsersPreviewWidget(
-                                        uid: documentSnapshot['uid'],
-                                        detail: documentSnapshot['detail'],
-                                        displayname:
-                                            documentSnapshot['Displayname'],
-                                      ),
+                                SizedBox(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 35.0),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 90.0),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    redColor, // Background color
+                                              ),
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection('users')
+                                                    .doc(
+                                                        documentSnapshot['uid'])
+                                                    .update({
+                                                  "points":
+                                                      FieldValue.increment(-20),
+                                                });
+                                                FirebaseFirestore.instance
+                                                    .collection('report')
+                                                    .doc(
+                                                        documentSnapshot['rid'])
+                                                    .delete();
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text(
+                                                'Yes',
+                                                style: TextStyle(
+                                                  fontFamily: 'MyCustomFont',
+                                                ),
+                                              )),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 90.0),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    unselected, // Background color
+                                              ),
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection('report')
+                                                    .doc(
+                                                        documentSnapshot['rid'])
+                                                    .delete();
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('No')),
+                                        )
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ],
+                            ),
+                          );
+                        },
+                      );
+                    }
+
+                    return Card(
+                      clipBehavior: Clip.hardEdge,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: const BorderSide(
+                          color: unselected,
+                          width: 1,
+                        ),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.00, top: 10),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: InkWell(
+                              onTap: () {
+                                _showModalBottomSheet(context);
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.12,
+                                        child: UsersPreviewWidget(
+                                          uid: documentSnapshot['uid'],
+                                          detail: documentSnapshot['detail'],
+                                          displayname:
+                                              documentSnapshot['Displayname'],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                );
+              }
+
+              return const Center(
+                child: Text('no data yet'),
               );
-            }
-
-            return const Center(
-              child: Text('no data yet'),
-            );
-          },
-        ),
-
-// Add new users
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => _create(),
-        //   child: const Icon(Icons.add),
-        // ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+            },
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat),
+    );
   }
 }
