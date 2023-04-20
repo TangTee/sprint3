@@ -179,7 +179,7 @@ class _U_statState extends State<U_stat> {
                                       lineHeight: 15.0,
                                       percent: userData['points'] / 100,
                                       center: Text(
-                                        '${userData['points']}%',
+                                        '${userData['points']} Points',
                                         style: const TextStyle(fontSize: 12.0),
                                       ),
                                       trailing: const Icon(Icons.mood),
@@ -198,7 +198,7 @@ class _U_statState extends State<U_stat> {
                                       lineHeight: 15.0,
                                       percent: userData['points'] / 100,
                                       center: Text(
-                                        '${userData['points']}%',
+                                        '${userData['points']} Points',
                                         style: const TextStyle(fontSize: 12.0),
                                       ),
                                       trailing:
@@ -218,7 +218,7 @@ class _U_statState extends State<U_stat> {
                                       lineHeight: 15.0,
                                       percent: userData['points'] / 100,
                                       center: Text(
-                                        '${userData['points']}%',
+                                        '${userData['points']} Points',
                                         style: const TextStyle(fontSize: 12.0),
                                       ),
                                       trailing: const Icon(
@@ -237,7 +237,7 @@ class _U_statState extends State<U_stat> {
                                       lineHeight: 15.0,
                                       percent: userData['points'] / 100,
                                       center: Text(
-                                        '${userData['points']}%',
+                                        '${userData['points']} Points',
                                         style: const TextStyle(fontSize: 12.0),
                                       ),
                                       trailing: const Icon(
