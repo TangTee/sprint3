@@ -155,11 +155,8 @@ class _ChatPageState extends State<ChatPage> {
                         builder: (context) => AlertDialog(
                               title: const Text('Close Activity'),
                               content: const Text(
-                                  'Are you sure you want to permanently\nclose this Activity ?'),
+                                  'Are you sure you want to permanently close this Activity ?'),
                               actions: [
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('Cancle')),
                                 TextButton(
                                   onPressed: (() async {
                                     FirebaseFirestore.instance
@@ -176,8 +173,16 @@ class _ChatPageState extends State<ChatPage> {
                                             'กิจกรรมจบแล้วอย่าลืมไปรีวิวเพื่อนๆนะ',
                                         payload: 'payload navigation');
                                   }),
-                                  child: const Text('Close'),
-                                )
+                                  child: const Text(
+                                    'Yes',
+                                    style: TextStyle(color: redColor),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancle',
+                                      style: TextStyle(color: unselected)),
+                                ),
                               ],
                             ));
                   },
