@@ -104,7 +104,6 @@ class _UsersPreviewWidgetState extends State<UsersPreviewWidget> {
                                     child: Column(
                                       children: [
                                         Container(
-                                          alignment: Alignment.centerLeft,
                                           padding: const EdgeInsets.only(
                                             left: 30,
                                           ),
@@ -132,13 +131,23 @@ class _UsersPreviewWidgetState extends State<UsersPreviewWidget> {
                                             ],
                                           ),
                                         ),
-                                        Text(
-                                          widget.detail,
-                                          maxLines: 2,
-                                          style: const TextStyle(
-                                              fontFamily: 'MyCustomFont',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w100),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                            left: 30,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                widget.detail,
+                                                maxLines: 2,
+                                                style: const TextStyle(
+                                                    fontFamily: 'MyCustomFont',
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w100),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -155,7 +164,7 @@ class _UsersPreviewWidgetState extends State<UsersPreviewWidget> {
               } else {
                 return Center(
                     child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor,
+                  color: mobileBackgroundColor,
                 ));
               }
             },
