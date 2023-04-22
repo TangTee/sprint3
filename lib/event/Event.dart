@@ -542,7 +542,6 @@ class _LoadTagState extends State<LoadTag> {
                                         // FirebaseAuth.instance.c//.doc(_post.id).update({
                                         //   'member': FieldValue.arrayUnion([uid]),
                                       });
-
                                       nextScreenReplaceOut(
                                           context,
                                           const MyHomePage(
@@ -555,7 +554,8 @@ class _LoadTagState extends State<LoadTag> {
                             },
                             child: const Text(
                               "Post",
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(
+                                  fontSize: 20, fontFamily: 'MyCustomFont'),
                             ),
                           ),
                         ),
