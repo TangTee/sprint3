@@ -148,7 +148,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
               final DocumentSnapshot documentSnapshot =
                   snapshot.data!.docs[index];
               return Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0, bottom: 10),
                 child: Card(
                   child: InkWell(
                     onTap: () {
