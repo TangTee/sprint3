@@ -62,6 +62,7 @@ class _ReviewState extends State<Review> {
     }
     setState(() {
       member_R.remove(user);
+      member_R.add('empty');
       isLoading = false;
     });
   }
@@ -139,7 +140,9 @@ class _ReviewState extends State<Review> {
                                               BorderRadius.circular(30)),
                                       backgroundColor: green),
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    int count = 0;
+                                    Navigator.of(context)
+                                        .popUntil((_) => count++ >= 2);
                                   },
                                   child: const Text(
                                     "Finish",
