@@ -128,26 +128,57 @@ class _GroupInfoState extends State<GroupInfo> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
                                   backgroundColor: green),
-                              onPressed: () {
-                                setState(() {
-                                  FirebaseFirestore.instance
-                                      .collection('join')
-                                      .doc(widget.groupId)
-                                      .update({
-                                    'clicked': FieldValue.arrayUnion([user]),
-                                  });
-                                  getData();
-                                });
-                                PersistentNavBarNavigator.pushNewScreen(
-                                  context,
-                                  screen: Review(
-                                      member: member,
-                                      groupName: widget.groupName),
-                                  withNavBar:
-                                      false, // OPTIONAL VALUE. True by default.
-                                  pageTransitionAnimation:
-                                      PageTransitionAnimation.cupertino,
-                                );
+                              onPressed: () async {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          title: const Text('Tung Tee'),
+                                          content: const Text(
+                                            'หน้านี้สามารถเข้าได้แค่ครั้งเดียวเท่านั้น',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: (() async {
+                                                setState(() {
+                                                  FirebaseFirestore.instance
+                                                      .collection('join')
+                                                      .doc(widget.groupId)
+                                                      .update({
+                                                    'clicked':
+                                                        FieldValue.arrayUnion(
+                                                            [user]),
+                                                  });
+                                                  getData();
+                                                });
+                                                PersistentNavBarNavigator
+                                                    .pushNewScreen(
+                                                  context,
+                                                  screen: Review(
+                                                      member: member,
+                                                      groupName:
+                                                          widget.groupName),
+                                                  withNavBar:
+                                                      false, // OPTIONAL VALUE. True by default.
+                                                  pageTransitionAnimation:
+                                                      PageTransitionAnimation
+                                                          .cupertino,
+                                                );
+                                              }),
+                                              child: const Text(
+                                                'รับทราบ',
+                                                style:
+                                                    TextStyle(color: redColor),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text('ย้อนกลับ',
+                                                  style: TextStyle(
+                                                      color: unselected)),
+                                            ),
+                                          ],
+                                        ));
                               },
                               child: const Text(
                                 "Review member",
