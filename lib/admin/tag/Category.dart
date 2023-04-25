@@ -20,10 +20,8 @@ class CategoryWidget extends StatefulWidget {
 class _CategoryWidgetState extends State<CategoryWidget> {
   // create category
   final TextEditingController _CategoryController = TextEditingController();
-
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
-  final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
 
   Future<void> _update(String categoryId) async {
     await showModalBottomSheet(
@@ -102,69 +100,12 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     nextScreen(context, MainPage());
   }
 
-  // call
-  var categoryIdData = {};
-  var categoryNameData = {};
-  var categoryColorData = {};
-  bool isLoading = false;
-
   @override
   void setState(VoidCallback fn) {
     if (mounted) {
       super.setState(fn);
     }
   }
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
-  getData() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      var categoryNameSnap = await FirebaseFirestore.instance
-          .collection('categorys')
-          .doc(widget.snap['Category'])
-          .get();
-
-      var categoryColorSnap = await FirebaseFirestore.instance
-          .collection('categorys')
-          .doc(widget.snap['color'])
-          .get();
-
-      var categoryIdSnap = await FirebaseFirestore.instance
-          .collection('categorys')
-          .doc(widget.snap['categoryId'])
-          .get();
-
-      categoryNameData = categoryNameSnap.data()!;
-      categoryColorData = categoryColorSnap.data()!;
-      categoryIdData = categoryIdSnap.data()!;
-      setState(() {});
-    } catch (e) {
-      showSnackBar(
-        context,
-        e.toString(),
-      );
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  final CollectionReference _tags =
-      FirebaseFirestore.instance.collection('tags');
-  final TextEditingController _tagController = TextEditingController();
-  final tagSet = FirebaseFirestore.instance.collection('tags');
-
-  final bool _isLoading = false;
-  bool submit = false;
-  final tagController = TextEditingController();
-  var tagCategoryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
