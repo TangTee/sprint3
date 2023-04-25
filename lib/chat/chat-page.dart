@@ -153,9 +153,9 @@ class _ChatPageState extends State<ChatPage> {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                              title: const Text('Close Activity'),
+                              title: const Text('ปิดกิจกกรม'),
                               content: const Text(
-                                  'Are you sure you want to permanently close this Activity ?'),
+                                  'คุณแน่ใจหรือไม่ว่าต้องการปิดกิจกรรมถาวร?'),
                               actions: [
                                 TextButton(
                                   onPressed: (() async {
@@ -174,13 +174,13 @@ class _ChatPageState extends State<ChatPage> {
                                         payload: 'payload navigation');
                                   }),
                                   child: const Text(
-                                    'Yes',
+                                    'ตกลง',
                                     style: TextStyle(color: redColor),
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: const Text('Cancle',
+                                  child: const Text('ย้อนกลับ',
                                       style: TextStyle(color: unselected)),
                                 ),
                               ],
