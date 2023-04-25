@@ -534,6 +534,7 @@ class _LoadTagState extends State<LoadTag> {
                                       "recentMessageSender": "",
                                       "recentMessageTime": "",
                                       "recentMessageUID": "",
+                                      "clicked": [],
                                       "unread": [],
                                     }).whenComplete(() {
                                       var uid = FirebaseAuth
