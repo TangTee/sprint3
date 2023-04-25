@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tangteevs/notification/notification.dart';
 import 'package:tangteevs/utils/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../HomePage.dart';
 import '../notification/services/local_notification_service.dart';
+import '../utils/showSnackbar.dart';
 import '../widgets/PostCard.dart';
 import '../widgets/SearchResult.dart';
 import '../widgets/custom_textfield.dart';
@@ -17,6 +19,8 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
+  var currentUser = {};
+  bool isLoading = false;
   @override
   void setState(VoidCallback fn) {
     if (mounted) {
@@ -42,49 +46,95 @@ class _FeedPageState extends State<FeedPage> {
     service.intialize();
     listenToNotification();
     super.initState();
+    getData();
+  }
+
+  getData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var currentSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      currentUser = currentSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(
+        context,
+        e.toString(),
+      );
+    }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DismissKeyboard(
-        child: Scaffold(
-          endDrawer: const notification(),
-          resizeToAvoidBottomInset: false,
-          backgroundColor: mobileBackgroundColor,
-          appBar: AppBar(
-            backgroundColor: mobileBackgroundColor,
-            elevation: 1,
-            centerTitle: false,
-            title: Image.asset(
-              "assets/images/logo with name.png",
-              width: MediaQuery.of(context).size.width * 0.31,
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : MaterialApp(
+            home: DismissKeyboard(
+              child: Scaffold(
+                endDrawer: const notification(),
+                resizeToAvoidBottomInset: false,
+                backgroundColor: mobileBackgroundColor,
+                appBar: currentUser['points'] < 41
+                    ? AppBar(
+                        backgroundColor: mobileBackgroundColor,
+                        elevation: 1,
+                        centerTitle: false,
+                        title: Image.asset(
+                          "assets/images/logo with name.png",
+                          width: MediaQuery.of(context).size.width * 0.31,
+                        ),
+                        actions: [
+                          Builder(
+                              builder: (context) => IconButton(
+                                  onPressed: () async {
+                                    Scaffold.of(context).openEndDrawer();
+                                  },
+                                  tooltip: MaterialLocalizations.of(context)
+                                      .openAppDrawerTooltip,
+                                  icon: const Icon(
+                                    Icons.notification_important_outlined,
+                                    color: redColor,
+                                    size: 30,
+                                  )))
+                        ],
+                      )
+                    : AppBar(
+                        backgroundColor: mobileBackgroundColor,
+                        elevation: 1,
+                        centerTitle: false,
+                        title: Image.asset(
+                          "assets/images/logo with name.png",
+                          width: MediaQuery.of(context).size.width * 0.31,
+                        ),
+                        actions: [
+                          Builder(
+                              builder: (context) => IconButton(
+                                  onPressed: () async {
+                                    Scaffold.of(context).openEndDrawer();
+                                  },
+                                  tooltip: MaterialLocalizations.of(context)
+                                      .openAppDrawerTooltip,
+                                  icon: const Icon(
+                                    Icons.notifications_none,
+                                    color: purple,
+                                    size: 30,
+                                  )))
+                        ],
+                      ),
+                body: const SearchForm(),
+              ),
             ),
-            actions: [
-              Builder(
-                  builder: (context) => IconButton(
-                      onPressed: () async {
-                        Scaffold.of(context).openEndDrawer();
-                        await service.showScheduledNotification(
-                          id: 0,
-                          title: 'TungTee',
-                          body: 'ระบบยังไม่สมบูรณ์',
-                          seconds: 4,
-                        );
-                      },
-                      tooltip: MaterialLocalizations.of(context)
-                          .openAppDrawerTooltip,
-                      icon: const Icon(
-                        Icons.notifications_none,
-                        color: purple,
-                        size: 30,
-                      )))
-            ],
-          ),
-          body: const SearchForm(),
-        ),
-      ),
-    );
+          );
   }
 }
 
