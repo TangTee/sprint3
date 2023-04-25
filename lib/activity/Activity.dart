@@ -21,16 +21,6 @@ class ActivityPage extends StatelessWidget {
               "assets/images/logo with name.png",
               width: MediaQuery.of(context).size.width * 0.31,
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications_none,
-                  color: purple,
-                  size: 30,
-                ),
-                onPressed: () {},
-              ),
-            ],
             bottom: const TabBar(
               indicatorColor: green,
               labelColor: green,
