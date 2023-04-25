@@ -98,15 +98,16 @@ class _ReviewCardState extends State<CardRWidget> {
                           backgroundImage: NetworkImage(
                             userData['profile'].toString(),
                           ),
-                          radius: 25,
+                          radius: 30,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              child: Text('\t\t${widget.review['groupName']}',
+                              child: Text(
+                                  '\t\t${widget.review['groupName'].toString()}',
                                   style: const TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontFamily: 'MyCustomFont',
                                     color: mobileSearchColor,
                                   )),
@@ -115,7 +116,7 @@ class _ReviewCardState extends State<CardRWidget> {
                               child: Text(
                                   '\t\t' + userData['Displayname'].toString(),
                                   style: const TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                     fontFamily: 'MyCustomFont',
                                     color: mobileSearchColor,
                                   )),
@@ -162,7 +163,7 @@ class _ReviewCardState extends State<CardRWidget> {
                     ),
                     Text('\t\t' + widget.review['review'],
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontFamily: 'MyCustomFont',
                           color: mobileSearchColor,
                         )),
