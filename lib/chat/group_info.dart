@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:tangteevs/chat/review2.dart';
 import 'package:tangteevs/profile/Profile.dart';
 import 'package:flutter/material.dart';
 
@@ -27,15 +28,14 @@ class GroupInfo extends StatefulWidget {
 
 class _GroupInfoState extends State<GroupInfo> {
   Stream? members;
+  final user = FirebaseAuth.instance.currentUser!.uid;
   var groupData = {};
   var postData = {};
   var currentUData = {};
   var member = [];
+  var clicked = [];
   bool isLoading = false;
-  final _formKey = GlobalKey<FormState>();
-  double rating2 = 1;
-  final _reviewController = TextEditingController();
-  final _review = FirebaseFirestore.instance.collection('reviews').doc();
+  bool isClick = false;
   @override
   void initState() {
     getData();
@@ -66,12 +66,20 @@ class _GroupInfoState extends State<GroupInfo> {
       groupData = groupSnap.data()!;
       currentUData = currentUSnap.data()!;
       member = groupSnap.data()?['member'];
+      clicked = groupSnap.data()?['clicked'];
+      isClick = clicked.every((value) {
+        if (value != FirebaseAuth.instance.currentUser!.uid) {
+          return true;
+        } else {
+          return false;
+        }
+      });
       setState(() {});
     } catch (e) {
-      showSnackBar(
-        context,
-        e.toString(),
-      );
+      // showSnackBar(
+      //   context,
+      //   e.toString(),
+      // );
     }
     setState(() {
       isLoading = false;
@@ -103,8 +111,54 @@ class _GroupInfoState extends State<GroupInfo> {
                   backgroundColor: lightPurple,
                   title: Text(widget.groupName),
                 ),
-                body: SafeArea(
-                  child: memberList(),
+                body: Stack(
+                  children: [
+                    memberList(),
+                    if (postData['open'] == false && isClick == true)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: SizedBox(
+                            width:
+                                400, //MediaQuery.of(context).size.width * 2.0,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  backgroundColor: green),
+                              onPressed: () {
+                                setState(() {
+                                  FirebaseFirestore.instance
+                                      .collection('join')
+                                      .doc(widget.groupId)
+                                      .update({
+                                    'clicked': FieldValue.arrayUnion([user]),
+                                  });
+                                  getData();
+                                });
+                                PersistentNavBarNavigator.pushNewScreen(
+                                  context,
+                                  screen: Review(
+                                      member: member,
+                                      groupName: widget.groupName),
+                                  withNavBar:
+                                      false, // OPTIONAL VALUE. True by default.
+                                  pageTransitionAnimation:
+                                      PageTransitionAnimation.cupertino,
+                                );
+                              },
+                              child: const Text(
+                                "Review member",
+                                style: TextStyle(
+                                    fontSize: 20, fontFamily: 'MyCustomFont'),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                  ],
                 ),
               ),
             ),
@@ -112,316 +166,135 @@ class _GroupInfoState extends State<GroupInfo> {
   }
 
   memberList() {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .where('uid', whereIn: widget.groupMember)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              final DocumentSnapshot documentSnapshot =
-                  snapshot.data!.docs[index];
-              return SafeArea(
-                child: Container(
-                  color: mobileBackgroundColor,
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 3,
-                    horizontal: 20,
-                  ),
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          PersistentNavBarNavigator.pushNewScreen(
-                            context,
-                            screen: ProfilePage(
-                              uid: documentSnapshot['uid'],
-                            ),
-                            withNavBar:
-                                false, // OPTIONAL VALUE. True by default.
-                          );
-                        },
-                        child: SafeArea(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 1),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: green,
-                                      backgroundImage: NetworkImage(
-                                        documentSnapshot['profile'].toString(),
+    return Container(
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .where('uid', whereIn: member)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot documentSnapshot =
+                    snapshot.data!.docs[index];
+                return SafeArea(
+                  child: Container(
+                    color: mobileBackgroundColor,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 3,
+                      horizontal: 20,
+                    ),
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: ProfilePage(
+                                uid: documentSnapshot['uid'],
+                              ),
+                              withNavBar:
+                                  false, // OPTIONAL VALUE. True by default.
+                            );
+                          },
+                          child: SafeArea(
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.08,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 1),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: green,
+                                        backgroundImage: NetworkImage(
+                                          documentSnapshot['profile']
+                                              .toString(),
+                                        ),
+                                        radius: 25,
                                       ),
-                                      radius: 25,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.56,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            documentSnapshot['Displayname'],
-                                            style: const TextStyle(
-                                              color: mobileSearchColor,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
                                                 0.02,
-                                          ),
-                                          if (documentSnapshot['uid'] ==
-                                              groupData['owner'])
-                                            const Text(
-                                              '[Host]',
-                                              style: TextStyle(
-                                                color: unselected,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.56,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              documentSnapshot['Displayname'],
+                                              style: const TextStyle(
+                                                color: mobileSearchColor,
                                                 fontSize: 14,
                                               ),
                                             ),
-                                        ],
-                                      ),
-                                    ),
-                                    if (postData['open'] == false &&
-                                        documentSnapshot['uid'] !=
-                                            FirebaseAuth
-                                                .instance.currentUser!.uid)
-                                      SizedBox(
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.rate_review,
-                                            color: unselected,
-                                            size: 30,
-                                          ),
-                                          onPressed: (() {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                      title:
-                                                          const Text('Review'),
-                                                      content: Form(
-                                                        key: _formKey,
-                                                        child: Column(
-                                                          children: [
-                                                            RatingBar.builder(
-                                                              initialRating: 1,
-                                                              minRating: 1,
-                                                              direction: Axis
-                                                                  .horizontal,
-                                                              allowHalfRating:
-                                                                  true,
-                                                              itemCount: 5,
-                                                              itemPadding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      horizontal:
-                                                                          4.0),
-                                                              itemBuilder:
-                                                                  (context,
-                                                                          _) =>
-                                                                      const Icon(
-                                                                Icons.star,
-                                                                color: Colors
-                                                                    .amber,
-                                                              ),
-                                                              onRatingUpdate:
-                                                                  (rating) {
-                                                                if (rating !=
-                                                                    0) {
-                                                                  rating2 =
-                                                                      rating;
-                                                                }
-                                                              },
-                                                            ),
-                                                            SizedBox(
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.16,
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        top: 0),
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      0.90,
-                                                                  child:
-                                                                      TextFormField(
-                                                                    keyboardType:
-                                                                        TextInputType
-                                                                            .multiline,
-                                                                    maxLines: 3,
-                                                                    controller:
-                                                                        _reviewController,
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      setState(
-                                                                          () {
-                                                                        // _enteredTextD = value;
-                                                                        // if (value.length > 25) {
-                                                                        //   TextD = redColor;
-                                                                        // } else {
-                                                                        //   TextD = mobileSearchColor;
-                                                                        // }
-                                                                      });
-                                                                    },
-                                                                    decoration:
-                                                                        textInputDecoration
-                                                                            .copyWith(
-                                                                      labelStyle:
-                                                                          const TextStyle(
-                                                                        color:
-                                                                            mobileSearchColor,
-                                                                        fontFamily:
-                                                                            "MyCustomFont",
-                                                                      ),
-                                                                      hintText:
-                                                                          'write review here',
-                                                                      // counterText:
-                                                                      //     '${_enteredTextD.length.toString()} /150',
-                                                                    ),
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value!
-                                                                          .isEmpty) {
-                                                                        return 'Please write review';
-                                                                      }
-                                                                      if (value
-                                                                              .length >
-                                                                          150) {
-                                                                        return 'Limit at 150 characters ';
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.pop(
-                                                                    context),
-                                                            child: const Text(
-                                                                'Cancle')),
-                                                        TextButton(
-                                                            onPressed:
-                                                                (() async {
-                                                              if (_formKey
-                                                                      .currentState!
-                                                                      .validate() ==
-                                                                  true) {
-                                                                setState(() {
-                                                                  isLoading =
-                                                                      true;
-                                                                });
-                                                                await _review
-                                                                    .set({
-                                                                  'reviewId':
-                                                                      _review
-                                                                          .id,
-                                                                  'uid':
-                                                                      documentSnapshot[
-                                                                          'uid'],
-                                                                  'review':
-                                                                      _reviewController
-                                                                          .text,
-                                                                  'rating':
-                                                                      rating2,
-                                                                  'reviewerId':
-                                                                      currentUData[
-                                                                          'uid'],
-                                                                  'timeStamp':
-                                                                      DateTime
-                                                                          .now(),
-                                                                }).whenComplete(
-                                                                        () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  setState(() {
-                                                                    _reviewController
-                                                                        .clear();
-                                                                    isLoading =
-                                                                        false;
-                                                                    // enable =
-                                                                    //     false;
-                                                                  });
-                                                                });
-                                                              }
-                                                            }),
-                                                            child: const Text(
-                                                                'Save'))
-                                                      ],
-                                                    ));
-                                          }),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.02,
+                                            ),
+                                            if (documentSnapshot['uid'] ==
+                                                groupData['owner'])
+                                              const Text(
+                                                '[Host]',
+                                                style: TextStyle(
+                                                  color: unselected,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                       ),
-                                    if (documentSnapshot['uid'] !=
-                                        FirebaseAuth.instance.currentUser!.uid)
-                                      SizedBox(
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.more_horiz,
-                                            color: unselected,
-                                            size: 30,
+                                      if (documentSnapshot['uid'] !=
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                        SizedBox(
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.more_horiz,
+                                              color: unselected,
+                                              size: 30,
+                                            ),
+                                            onPressed: (() {
+                                              //add action
+                                              return _showModalBottomSheetP(
+                                                  context,
+                                                  documentSnapshot,
+                                                  groupData);
+                                            }),
                                           ),
-                                          onPressed: (() {
-                                            //add action
-                                            return _showModalBottomSheetP(
-                                                context,
-                                                documentSnapshot,
-                                                groupData);
-                                          }),
                                         ),
-                                      ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        } else {
-          return Center(
-              child: CircularProgressIndicator(
-            color: Theme.of(context).primaryColor,
-          ));
-        }
-      },
+                );
+              },
+            );
+          } else {
+            return Center(
+                child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ));
+          }
+        },
+      ),
     );
   }
 }
