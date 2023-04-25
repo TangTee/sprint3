@@ -118,11 +118,11 @@ class _GroupInfoState extends State<GroupInfo> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
+                          padding: const EdgeInsets.only(bottom: 30),
                           child: SizedBox(
-                            width:
-                                400, //MediaQuery.of(context).size.width * 2.0,
-                            height: 50,
+                            width: MediaQuery.of(context).size.width *
+                                0.80, //MediaQuery.of(context).size.width * 2.0,
+                            height: MediaQuery.of(context).size.height * 0.05,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
