@@ -54,15 +54,24 @@ showModalBottomSheetC(BuildContext context) {
                               width: 2,
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.network(
-                                Mytext["categoryImage"],
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ],
+                          child: InkWell(
+                            onTap: () {
+                              value = showModalBottomSheetT(
+                                  context,
+                                  Mytext['categoryId'],
+                                  Mytext['Category'],
+                                  value);
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                  Mytext["categoryImage"],
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         ListTile(
