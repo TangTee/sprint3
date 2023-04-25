@@ -116,46 +116,44 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: const Center(
-                    child: Text(
-                      'Edit Profile',
-                      style:
-                          TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
-                    ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                title: const Center(
+                  child: Text(
+                    'Edit Profile',
+                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditPage(
-                          uid: FirebaseAuth.instance.currentUser!.uid,
-                        ),
-                      ),
-                    );
-                  },
                 ),
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  title: const Center(
-                    child: Text(
-                      'User statistics',
-                      style:
-                          TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditPage(
+                        uid: FirebaseAuth.instance.currentUser!.uid,
+                      ),
                     ),
+                  );
+                },
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                title: const Center(
+                  child: Text(
+                    'User statistics',
+                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => U_stat(
-                          uid: FirebaseAuth.instance.currentUser!.uid,
-                        ),
-                      ),
-                    );
-                  },
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => U_stat(
+                        uid: FirebaseAuth.instance.currentUser!.uid,
+                      ),
+                    ),
+                  );
+                },
+              ),
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                 title: const Center(
@@ -469,7 +467,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.613,
+                                    MediaQuery.of(context).size.height * 0.59,
                                 child: TabBarView(children: <Widget>[
                                   Container(
                                     child: StreamBuilder<QuerySnapshot>(
