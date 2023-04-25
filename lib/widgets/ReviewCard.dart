@@ -104,6 +104,14 @@ class _ReviewCardState extends State<CardRWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
+                              child: Text('\t\t${widget.review['groupName']}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'MyCustomFont',
+                                    color: mobileSearchColor,
+                                  )),
+                            ),
+                            SizedBox(
                               child: Text(
                                   '\t\t' + userData['Displayname'].toString(),
                                   style: const TextStyle(
