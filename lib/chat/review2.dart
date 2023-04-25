@@ -112,35 +112,45 @@ class _ReviewState extends State<Review> {
                       ))
                     : Stack(
                         children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text('หน้านี้สามารถเข้าได้แค่ครั้งเดียวเท่านั้น',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: redColor)),
+                            ],
+                          ),
                           memberList(),
-                          if (widget.member.length == 1)
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 15),
-                                child: SizedBox(
-                                  width:
-                                      400, //MediaQuery.of(context).size.width * 2.0,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30)),
-                                        backgroundColor: green),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text(
-                                      "Finish",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: 'MyCustomFont'),
-                                    ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: SizedBox(
+                                width:
+                                    400, //MediaQuery.of(context).size.width * 2.0,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      backgroundColor: green),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    "Finish",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'MyCustomFont'),
                                   ),
                                 ),
                               ),
-                            )
+                            ),
+                          )
                         ],
                       ),
               ),
@@ -162,238 +172,252 @@ class _ReviewState extends State<Review> {
             itemBuilder: (context, index) {
               final DocumentSnapshot documentSnapshot =
                   snapshot.data!.docs[index];
-              return SafeArea(
-                child: Container(
-                  color: mobileBackgroundColor,
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 3,
-                    horizontal: 20,
-                  ),
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    children: <Widget>[
-                      InkWell(
-                        child: SafeArea(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 1),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: green,
-                                      backgroundImage: NetworkImage(
-                                        documentSnapshot['profile'].toString(),
-                                      ),
-                                      radius: 25,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.56,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            documentSnapshot['Displayname'],
-                                            style: const TextStyle(
-                                              color: mobileSearchColor,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.02,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.rate_review,
-                                          color: unselected,
-                                          size: 30,
+              return Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: SafeArea(
+                  child: Container(
+                    color: mobileBackgroundColor,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 3,
+                      horizontal: 20,
+                    ),
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      children: <Widget>[
+                        InkWell(
+                          child: SafeArea(
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.08,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 1),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: green,
+                                        backgroundImage: NetworkImage(
+                                          documentSnapshot['profile']
+                                              .toString(),
                                         ),
-                                        onPressed: (() {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => AlertDialog(
-                                                    title: const Text('Review'),
-                                                    content: Form(
-                                                      key: _reviewKey,
-                                                      child: Column(
-                                                        children: [
-                                                          RatingBar.builder(
-                                                            initialRating: 1,
-                                                            minRating: 1,
-                                                            direction:
-                                                                Axis.horizontal,
-                                                            allowHalfRating:
-                                                                true,
-                                                            itemCount: 5,
-                                                            itemPadding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        4.0),
-                                                            itemBuilder:
-                                                                (context, _) =>
-                                                                    const Icon(
-                                                              Icons.star,
-                                                              color:
-                                                                  Colors.amber,
-                                                            ),
-                                                            onRatingUpdate:
-                                                                (rating) {
-                                                              if (rating != 0) {
-                                                                rating2 =
-                                                                    rating;
-                                                              }
-                                                            },
-                                                          ),
-                                                          SizedBox(
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height *
-                                                                0.16,
-                                                            child: Padding(
-                                                              padding:
+                                        radius: 25,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.02,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.56,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              documentSnapshot['Displayname'],
+                                              style: const TextStyle(
+                                                color: mobileSearchColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.02,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.rate_review,
+                                            color: unselected,
+                                            size: 30,
+                                          ),
+                                          onPressed: (() {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                      title:
+                                                          const Text('Review'),
+                                                      content: Form(
+                                                        key: _reviewKey,
+                                                        child: Column(
+                                                          children: [
+                                                            RatingBar.builder(
+                                                              initialRating: 1,
+                                                              minRating: 1,
+                                                              direction: Axis
+                                                                  .horizontal,
+                                                              allowHalfRating:
+                                                                  true,
+                                                              itemCount: 5,
+                                                              itemPadding:
                                                                   const EdgeInsets
-                                                                          .only(
-                                                                      top: 0),
-                                                              child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    0.90,
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          4.0),
+                                                              itemBuilder:
+                                                                  (context,
+                                                                          _) =>
+                                                                      const Icon(
+                                                                Icons.star,
+                                                                color: Colors
+                                                                    .amber,
+                                                              ),
+                                                              onRatingUpdate:
+                                                                  (rating) {
+                                                                if (rating !=
+                                                                    0) {
+                                                                  rating2 =
+                                                                      rating;
+                                                                }
+                                                              },
+                                                            ),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.16,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top: 0),
                                                                 child:
-                                                                    TextFormField(
-                                                                  keyboardType:
-                                                                      TextInputType
-                                                                          .multiline,
-                                                                  maxLines: 3,
-                                                                  controller:
-                                                                      _reviewController,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    setState(
-                                                                        () {});
-                                                                  },
-                                                                  decoration:
-                                                                      textInputDecoration
-                                                                          .copyWith(
-                                                                    labelStyle:
-                                                                        const TextStyle(
-                                                                      color:
-                                                                          mobileSearchColor,
-                                                                      fontFamily:
-                                                                          "MyCustomFont",
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.90,
+                                                                  child:
+                                                                      TextFormField(
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .multiline,
+                                                                    maxLines: 3,
+                                                                    controller:
+                                                                        _reviewController,
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {});
+                                                                    },
+                                                                    decoration:
+                                                                        textInputDecoration
+                                                                            .copyWith(
+                                                                      labelStyle:
+                                                                          const TextStyle(
+                                                                        color:
+                                                                            mobileSearchColor,
+                                                                        fontFamily:
+                                                                            "MyCustomFont",
+                                                                      ),
+                                                                      hintText:
+                                                                          'write review here',
                                                                     ),
-                                                                    hintText:
-                                                                        'write review here',
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                          .isEmpty) {
+                                                                        return 'Please write review';
+                                                                      }
+                                                                      if (value
+                                                                              .length >
+                                                                          150) {
+                                                                        return 'Limit at 150 characters ';
+                                                                      }
+                                                                      return null;
+                                                                    },
                                                                   ),
-                                                                  validator:
-                                                                      (value) {
-                                                                    if (value!
-                                                                        .isEmpty) {
-                                                                      return 'Please write review';
-                                                                    }
-                                                                    if (value
-                                                                            .length >
-                                                                        150) {
-                                                                      return 'Limit at 150 characters ';
-                                                                    }
-                                                                    return null;
-                                                                  },
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  context),
-                                                          child: const Text(
-                                                              'Cancle')),
-                                                      TextButton(
-                                                          onPressed: (() async {
-                                                            if (_reviewKey
-                                                                    .currentState!
-                                                                    .validate() ==
-                                                                true) {
-                                                              setState(() {
-                                                                isLoading =
-                                                                    true;
-                                                              });
-                                                              await _review
-                                                                  .set({
-                                                                'reviewId':
-                                                                    _review.id,
-                                                                'uid':
-                                                                    documentSnapshot[
-                                                                        'uid'],
-                                                                'review':
-                                                                    _reviewController
-                                                                        .text,
-                                                                'rating':
-                                                                    rating2,
-                                                                'groupName': widget
-                                                                    .groupName,
-                                                                'reviewerId':
-                                                                    user,
-                                                                'timeStamp':
-                                                                    DateTime
-                                                                        .now(),
-                                                              }).whenComplete(
-                                                                      () {
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () =>
                                                                 Navigator.pop(
-                                                                    context);
+                                                                    context),
+                                                            child: const Text(
+                                                                'Cancle')),
+                                                        TextButton(
+                                                            onPressed:
+                                                                (() async {
+                                                              if (_reviewKey
+                                                                      .currentState!
+                                                                      .validate() ==
+                                                                  true) {
                                                                 setState(() {
-                                                                  member_R.remove(
-                                                                      documentSnapshot[
-                                                                          'uid']);
-                                                                  _reviewController
-                                                                      .clear();
                                                                   isLoading =
-                                                                      false;
-                                                                  // enable =
-                                                                  //     false;
+                                                                      true;
                                                                 });
-                                                              });
-                                                            }
-                                                          }),
-                                                          child: const Text(
-                                                              'Save'))
-                                                    ],
-                                                  ));
-                                        }),
+                                                                await _review
+                                                                    .set({
+                                                                  'reviewId':
+                                                                      _review
+                                                                          .id,
+                                                                  'uid':
+                                                                      documentSnapshot[
+                                                                          'uid'],
+                                                                  'review':
+                                                                      _reviewController
+                                                                          .text,
+                                                                  'rating':
+                                                                      rating2,
+                                                                  'groupName':
+                                                                      widget
+                                                                          .groupName,
+                                                                  'reviewerId':
+                                                                      user,
+                                                                  'timeStamp':
+                                                                      DateTime
+                                                                          .now(),
+                                                                }).whenComplete(
+                                                                        () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  setState(() {
+                                                                    member_R.remove(
+                                                                        documentSnapshot[
+                                                                            'uid']);
+                                                                    _reviewController
+                                                                        .clear();
+                                                                    isLoading =
+                                                                        false;
+                                                                    // enable =
+                                                                    //     false;
+                                                                  });
+                                                                });
+                                                              }
+                                                            }),
+                                                            child: const Text(
+                                                                'Save'))
+                                                      ],
+                                                    ));
+                                          }),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
