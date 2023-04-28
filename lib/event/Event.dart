@@ -432,136 +432,172 @@ class _LoadTagState extends State<LoadTag> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 90.0,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                backgroundColor: green),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate() == true) {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                if (valuee == null) {
-                                  await _post.set({
-                                    'postid': _post.id,
-                                    'activityName': _activityName.text,
-                                    'place': _place.text,
-                                    'location': _location.text,
-                                    'date': dateController.text,
-                                    'time': _time.text,
-                                    'detail': _detail.text,
-                                    'peopleLimit': _peopleLimit.text,
-                                    'likes': [],
-                                    'waiting': [],
-                                    'history': [
-                                      FirebaseAuth.instance.currentUser?.uid
-                                    ],
-                                    'tag': "other".toString(),
-                                    'tagColor': "#000000".toString(),
-                                    'open': true,
-                                    'timeStamp': FieldValue.serverTimestamp(),
-                                    'uid':
-                                        FirebaseAuth.instance.currentUser?.uid,
-                                  }).whenComplete(() {
-                                    _join.doc(_post.id).set({
-                                      'owner': FirebaseAuth
-                                          .instance.currentUser?.uid,
-                                      'member': [
-                                        FirebaseAuth.instance.currentUser?.uid
-                                      ],
-                                      'groupid': _post.id,
-                                      'groupName': _activityName.text,
-                                      "recentMessage": "",
-                                      "recentMessageSender": "",
-                                      "recentMessageTime": "",
-                                      "recentMessageUID": "",
-                                      "clicked": [],
-                                      "unread": [],
-                                    }).whenComplete(() {
-                                      var uid = FirebaseAuth
-                                          .instance.currentUser?.uid;
-                                      _join.doc(_post.id).update({
-                                        'member': FieldValue.arrayUnion([uid]),
-                                        // FirebaseAuth.instance.c//.doc(_post.id).update({
-                                        //   'member': FieldValue.arrayUnion([uid]),
-                                      });
+                      _time.text == ''
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 90.0,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      backgroundColor: unselected),
+                                  onPressed: () {},
+                                  child: const Text(
+                                    "Post",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'MyCustomFont'),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : valuee == null
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        90.0,
+                                    height: 50,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          backgroundColor: unselected),
+                                      onPressed: () {},
+                                      child: const Text(
+                                        "Post",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'MyCustomFont'),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : valuee == "other"
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                90.0,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30)),
+                                              backgroundColor: unselected),
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "Post",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: 'MyCustomFont'),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                90.0,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30)),
+                                              backgroundColor: green),
+                                          onPressed: () async {
+                                            if (_formKey.currentState!
+                                                    .validate() ==
+                                                true) {
+                                              setState(() {
+                                                _isLoading = true;
+                                              });
 
-                                      nextScreenReplaceOut(
-                                          context,
-                                          const MyHomePage(
-                                            index: 0,
-                                          ));
-                                    });
-                                  });
-                                } else {
-                                  await _post.set({
-                                    'postid': _post.id,
-                                    'activityName': _activityName.text,
-                                    'place': _place.text,
-                                    'location': _location.text,
-                                    'date': dateController.text,
-                                    'time': _time.text,
-                                    'detail': _detail.text,
-                                    'peopleLimit': _peopleLimit.text,
-                                    'likes': [],
-                                    'waiting': [],
-                                    'history': [
-                                      FirebaseAuth.instance.currentUser?.uid
-                                    ],
-                                    'category': valuee['_category2'],
-                                    'tag': valuee['_tag2'],
-                                    'tagColor': valuee['_tag2Color'],
-                                    'open': true,
-                                    'timeStamp': FieldValue.serverTimestamp(),
-                                    'uid':
-                                        FirebaseAuth.instance.currentUser?.uid,
-                                  }).whenComplete(() {
-                                    _join.doc(_post.id).set({
-                                      'owner': FirebaseAuth
-                                          .instance.currentUser?.uid,
-                                      'member': [
-                                        FirebaseAuth.instance.currentUser?.uid
-                                      ],
-                                      'groupid': _post.id,
-                                      'groupName': _activityName.text,
-                                      "recentMessage": "",
-                                      "recentMessageSender": "",
-                                      "recentMessageTime": "",
-                                      "recentMessageUID": "",
-                                      "clicked": [],
-                                      "unread": [],
-                                    }).whenComplete(() {
-                                      var uid = FirebaseAuth
-                                          .instance.currentUser?.uid;
-                                      _join.doc(_post.id).update({
-                                        'member': FieldValue.arrayUnion([uid]),
-                                        // FirebaseAuth.instance.c//.doc(_post.id).update({
-                                        //   'member': FieldValue.arrayUnion([uid]),
-                                      });
-                                      nextScreenReplaceOut(
-                                          context,
-                                          const MyHomePage(
-                                            index: 0,
-                                          ));
-                                    });
-                                  });
-                                }
-                              }
-                            },
-                            child: const Text(
-                              "Post",
-                              style: TextStyle(
-                                  fontSize: 20, fontFamily: 'MyCustomFont'),
-                            ),
-                          ),
-                        ),
-                      ),
+                                              await _post.set({
+                                                'postid': _post.id,
+                                                'activityName':
+                                                    _activityName.text,
+                                                'place': _place.text,
+                                                'location': _location.text,
+                                                'date': dateController.text,
+                                                'time': _time.text,
+                                                'detail': _detail.text,
+                                                'peopleLimit':
+                                                    _peopleLimit.text,
+                                                'likes': [],
+                                                'waiting': [],
+                                                'history': [
+                                                  FirebaseAuth
+                                                      .instance.currentUser?.uid
+                                                ],
+                                                'category':
+                                                    valuee['_category2'],
+                                                'tag': valuee['_tag2'],
+                                                'tagColor':
+                                                    valuee['_tag2Color'],
+                                                'open': true,
+                                                'timeStamp': FieldValue
+                                                    .serverTimestamp(),
+                                                'uid': FirebaseAuth
+                                                    .instance.currentUser?.uid,
+                                              }).whenComplete(() {
+                                                _join.doc(_post.id).set({
+                                                  'owner': FirebaseAuth.instance
+                                                      .currentUser?.uid,
+                                                  'member': [
+                                                    FirebaseAuth.instance
+                                                        .currentUser?.uid
+                                                  ],
+                                                  'groupid': _post.id,
+                                                  'groupName':
+                                                      _activityName.text,
+                                                  "recentMessage": "",
+                                                  "recentMessageSender": "",
+                                                  "recentMessageTime": "",
+                                                  "recentMessageUID": "",
+                                                  "clicked": [],
+                                                  "unread": [],
+                                                }).whenComplete(() {
+                                                  var uid = FirebaseAuth
+                                                      .instance
+                                                      .currentUser
+                                                      ?.uid;
+                                                  _join.doc(_post.id).update({
+                                                    'member':
+                                                        FieldValue.arrayUnion(
+                                                            [uid]),
+                                                    // FirebaseAuth.instance.c//.doc(_post.id).update({
+                                                    //   'member': FieldValue.arrayUnion([uid]),
+                                                  });
+                                                  nextScreenReplaceOut(
+                                                      context,
+                                                      const MyHomePage(
+                                                        index: 0,
+                                                      ));
+                                                });
+                                              });
+                                            }
+                                          },
+                                          child: const Text(
+                                            "Post",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: 'MyCustomFont'),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                     ],
                   ),
                 ),
