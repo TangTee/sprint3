@@ -9,6 +9,9 @@ showModalBottomSheetC(BuildContext context) {
   final CollectionReference categorys =
       FirebaseFirestore.instance.collection('categorys');
   var value = {};
+  value['_category2'] = "other";
+  value['_tag2'] = "other";
+  value['_tag2Color'] = "#000000".toString();
 
   showModalBottomSheet(
     useRootNavigator: true,
