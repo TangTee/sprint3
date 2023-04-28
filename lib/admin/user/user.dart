@@ -59,27 +59,6 @@ class _UserPageState extends State<UserPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              // hwak 1
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
-                title: const Center(
-                  child: Text(
-                    'test hwak',
-                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return const testColor();
-                      },
-                    ),
-                    (_) => false,
-                  );
-                },
-              ),
-
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
                 title: const Center(
@@ -101,8 +80,6 @@ class _UserPageState extends State<UserPage> {
                   );
                 },
               ),
-              // hwak2
-
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
                 title: const Center(
@@ -118,7 +95,6 @@ class _UserPageState extends State<UserPage> {
                   nextScreenReplaceOut(context, const LandingPage());
                 },
               ),
-
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
                 title: const Center(
@@ -142,8 +118,6 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final foregroundColor =
-    //     useWhiteForeground(currentColor) ? Colors.white : Colors.black;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
