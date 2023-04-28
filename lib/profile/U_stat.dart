@@ -170,14 +170,18 @@ class _U_statState extends State<U_stat> {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                const Text(
-                                  'No matter how many User Points you have. If you receive report \nfrom other users your User Point will be reduced. And if your \nUser Point run out your account will be banned from tungTee',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'MyCustomFont',
-                                    color: mobileSearchColor,
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.84,
+                                  child: Text(
+                                    'No matter how many User Points you have.\nIf you receive report from other users your User Point will be reduced. And if your User Point run out your account will be banned from tungTee',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'MyCustomFont',
+                                      color: mobileSearchColor,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                                 if (userData['points'] >= 80)
                                   Padding(
