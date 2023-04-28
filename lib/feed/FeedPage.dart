@@ -21,6 +21,7 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends State<FeedPage> {
   var currentUser = {};
   bool isLoading = false;
+  bool descending = false;
   @override
   void setState(VoidCallback fn) {
     if (mounted) {
@@ -148,6 +149,7 @@ class SearchForm extends StatefulWidget {
 class _SearchFormState extends State<SearchForm> {
   final activitySearch = TextEditingController();
   late final LocalNotificationService service;
+  bool descending = true;
   void listenToNotification() =>
       service.onNotificationClick.stream.listen(onNoticationListener);
   void onNoticationListener(String? payload) {
@@ -217,56 +219,44 @@ class _SearchFormState extends State<SearchForm> {
               ),
             ),
             actions: [
-              PopupMenuButton(
-                  itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem<int>(
-                        value: 0,
-                        child: Text("Make for you"),
-                      ),
-                      const PopupMenuItem<int>(
-                        value: 1,
-                        child: Text("New to you"),
-                      ),
-                    ];
-                  },
-                  icon: const Icon(
-                    Icons.filter_list,
-                    color: green,
-                    size: 30,
-                  ),
-                  onSelected: (value) {
-                    if (value == 0) {
-                      final snackBar = SnackBar(
-                        content: const Text("Display feed for you"),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            // Some code to undo the change.
-                          },
+              if (activitySearch.text.isEmpty)
+                PopupMenuButton(
+                    itemBuilder: (context) {
+                      return [
+                        const PopupMenuItem<int>(
+                          value: 0,
+                          child: Text("ascending time"),
                         ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } else if (value == 1) {
-                      final snackBar = SnackBar(
-                        content: const Text("Display new for you"),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            // Some code to undo the change.
-                          },
+                        const PopupMenuItem<int>(
+                          value: 1,
+                          child: Text("descending time"),
                         ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }
-                  }),
+                      ];
+                    },
+                    icon: const Icon(
+                      Icons.filter_list,
+                      color: green,
+                      size: 30,
+                    ),
+                    onSelected: (value) {
+                      if (value == 0) {
+                        setState(() {
+                          descending = false;
+                        });
+                      } else if (value == 1) {
+                        setState(() {
+                          descending = true;
+                        });
+                      }
+                    }),
             ],
           ),
           //),
         ];
       },
       body: SafeArea(
-        child: PostCard(activitySearch: activitySearch.text),
+        child: PostCard(
+            activitySearch: activitySearch.text, descending: descending),
       ),
     );
   }
@@ -278,15 +268,17 @@ class PostCard extends StatelessWidget {
 
   //PostCard({super.key});
   final String activitySearch;
-  PostCard({Key? key, required this.activitySearch}) : super(key: key);
+  final bool descending;
+  PostCard({Key? key, required this.activitySearch, required this.descending})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return activitySearch != ""
         ? StreamBuilder<QuerySnapshot>(
             stream: _post
-                .where('open', isEqualTo: true)
                 .where('activityName', isGreaterThanOrEqualTo: activitySearch)
+                .where('open', isEqualTo: true)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -327,7 +319,7 @@ class PostCard extends StatelessWidget {
         : StreamBuilder<QuerySnapshot>(
             stream: _post
                 .where('open', isEqualTo: true)
-                .orderBy('timeStamp', descending: true)
+                .orderBy('timeStamp', descending: descending)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
