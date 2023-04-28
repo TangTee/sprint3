@@ -150,6 +150,7 @@ class _SearchFormState extends State<SearchForm> {
   final activitySearch = TextEditingController();
   late final LocalNotificationService service;
   bool descending = true;
+  bool clear = true;
   void listenToNotification() =>
       service.onNotificationClick.stream.listen(onNoticationListener);
   void onNoticationListener(String? payload) {
@@ -231,6 +232,10 @@ class _SearchFormState extends State<SearchForm> {
                           value: 1,
                           child: Text("descending time"),
                         ),
+                        const PopupMenuItem<int>(
+                          value: 2,
+                          child: Text("clear"),
+                        ),
                       ];
                     },
                     icon: const Icon(
@@ -241,11 +246,17 @@ class _SearchFormState extends State<SearchForm> {
                     onSelected: (value) {
                       if (value == 0) {
                         setState(() {
+                          clear = false;
                           descending = false;
                         });
                       } else if (value == 1) {
                         setState(() {
+                          clear = false;
                           descending = true;
+                        });
+                      } else if (value == 2) {
+                        setState(() {
+                          clear = true;
                         });
                       }
                     }),
@@ -256,7 +267,9 @@ class _SearchFormState extends State<SearchForm> {
       },
       body: SafeArea(
         child: PostCard(
-            activitySearch: activitySearch.text, descending: descending),
+            activitySearch: activitySearch.text,
+            descending: descending,
+            clear: clear),
       ),
     );
   }
@@ -266,10 +279,14 @@ class PostCard extends StatelessWidget {
   final CollectionReference _post =
       FirebaseFirestore.instance.collection('post');
 
-  //PostCard({super.key});
   final String activitySearch;
   final bool descending;
-  PostCard({Key? key, required this.activitySearch, required this.descending})
+  final bool clear;
+  PostCard(
+      {Key? key,
+      required this.activitySearch,
+      required this.descending,
+      required this.clear})
       : super(key: key);
 
   @override
@@ -316,35 +333,69 @@ class PostCard extends StatelessWidget {
                             snap: (snapshot.data! as dynamic).docs[index]),
                       ));
             })
-        : StreamBuilder<QuerySnapshot>(
-            stream: _post
-                .where('open', isEqualTo: true)
-                .orderBy('timeStamp', descending: descending)
-                .snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const <Widget>[
-                        SizedBox(
-                          height: 30.0,
-                          width: 30.0,
-                          child: CircularProgressIndicator(),
+        : clear == true
+            ? StreamBuilder<QuerySnapshot>(
+                stream: _post
+                    .where('open', isEqualTo: true)
+                    .orderBy('timeStamp', descending: true)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData) {
+                    return Container(
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const <Widget>[
+                            SizedBox(
+                              height: 30.0,
+                              width: 30.0,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }
+                      ),
+                    );
+                  }
 
-              return ListView.builder(
-                  itemCount: (snapshot.data! as dynamic).docs.length,
-                  itemBuilder: (context, index) => Container(
-                        child: CardWidget(
-                            snap: (snapshot.data! as dynamic).docs[index]),
-                      ));
-            });
+                  return ListView.builder(
+                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      itemBuilder: (context, index) => Container(
+                            child: CardWidget(
+                                snap: (snapshot.data! as dynamic).docs[index]),
+                          ));
+                })
+            : StreamBuilder<QuerySnapshot>(
+                stream: _post
+                    .where('open', isEqualTo: true)
+                    .orderBy('date', descending: descending)
+                    .orderBy('time', descending: descending)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData) {
+                    return Container(
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const <Widget>[
+                            SizedBox(
+                              height: 30.0,
+                              width: 30.0,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      itemBuilder: (context, index) => Container(
+                            child: CardWidget(
+                                snap: (snapshot.data! as dynamic).docs[index]),
+                          ));
+                });
   }
 }
