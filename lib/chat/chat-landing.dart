@@ -117,7 +117,6 @@ class _ChatHomePageState extends State<ChatHomePage> {
           ),
           ListTile(
             onTap: () {},
-            selectedColor: Theme.of(context).primaryColor,
             selected: true,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -148,8 +147,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
               final DocumentSnapshot documentSnapshot =
                   snapshot.data!.docs[index];
               return Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 10),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Card(
+                  color: mobileBackgroundColor,
                   child: InkWell(
                     onTap: () {
                       // Unread(
