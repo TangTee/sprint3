@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tangteevs/utils/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:tangteevs/utils/showSnackbar.dart';
 import '../../widgets/custom_textfield.dart';
 import 'Category.dart';
 import 'hsv_picker.dart';
@@ -26,8 +27,9 @@ class _MainPageState extends State<MainPage> {
       FirebaseFirestore.instance.collection('categorys');
   final TextEditingController _CategoryController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
-  final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
+  var categorysSet;
   String ImageCategory = "";
+  var isLoading = false;
 
   Color currentColor = purple;
   List<Color> colorHistory = [];
@@ -36,6 +38,30 @@ class _MainPageState extends State<MainPage> {
 
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
+      setState(() {});
+    } catch (e) {
+      showSnackBar(
+        context,
+        e.toString(),
+      );
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
@@ -186,9 +212,12 @@ class _MainPageState extends State<MainPage> {
                           "categoryId": categorysSet.id,
                           "categoryImage": ImageCategory
                         });
-
-                        _CategoryController.text = '';
-                        _colorController.text = '';
+                        setState(() {
+                          _CategoryController.clear();
+                          _colorController.clear();
+                          media = null;
+                          currentColor = purple;
+                        });
                         Navigator.of(context).pop();
                       },
                       child: const Text(
@@ -211,32 +240,34 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DismissKeyboard(
-        child: Scaffold(
-          backgroundColor: mobileBackgroundColor,
-          appBar: AppBar(
-            toolbarHeight: 50,
-            backgroundColor: mobileBackgroundColor,
-            leadingWidth: 130,
-            centerTitle: true,
-            leading: Container(
-              padding: const EdgeInsets.all(0),
-              child: Image.asset('assets/images/logo with name.png',
-                  fit: BoxFit.scaleDown),
+    return isLoading
+        ? Text('data')
+        : MaterialApp(
+            home: DismissKeyboard(
+              child: Scaffold(
+                backgroundColor: mobileBackgroundColor,
+                appBar: AppBar(
+                  toolbarHeight: 50,
+                  backgroundColor: mobileBackgroundColor,
+                  leadingWidth: 130,
+                  centerTitle: true,
+                  leading: Container(
+                    padding: const EdgeInsets.all(0),
+                    child: Image.asset('assets/images/logo with name.png',
+                        fit: BoxFit.scaleDown),
+                  ),
+                ),
+                resizeToAvoidBottomInset: false,
+                body: SafeArea(
+                  child: Category(),
+                ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () => _create().whenComplete(() => getData()),
+                  child: Icon(Icons.add),
+                ),
+              ),
             ),
-          ),
-          resizeToAvoidBottomInset: false,
-          body: SafeArea(
-            child: Category(),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => _create(),
-            child: Icon(Icons.add),
-          ),
-        ),
-      ),
-    );
+          );
   }
 }
 
