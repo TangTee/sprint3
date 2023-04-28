@@ -513,6 +513,21 @@ class _PostCardState extends State<CardWidget> {
                                           ),
                                         );
                                       });
+                                      FirebaseFirestore.instance
+                                          .collection('join')
+                                          .doc(widget.snap['postid'])
+                                          .delete()
+                                          .whenComplete(() {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MyHomePage(
+                                              index: 0,
+                                            ),
+                                          ),
+                                        );
+                                      });
                                     }),
                                     child: const Text('Delete'))
                               ],
