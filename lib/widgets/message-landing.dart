@@ -150,7 +150,7 @@ class _MessagePreviewWidgetState extends State<MessagePreviewWidget> {
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.47,
+                                                    0.45,
                                                 child: widget.messageContent
                                                         .startsWith('https://')
                                                     ? Container(
