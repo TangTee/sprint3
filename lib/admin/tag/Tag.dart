@@ -219,8 +219,10 @@ class _TagCategoryState extends State<TagCategory> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 500,
-                                  width: 600,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.98,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.6,
                                   child: Row(
                                     children: <Widget>[
                                       Expanded(
