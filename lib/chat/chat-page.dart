@@ -125,177 +125,187 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DismissKeyboard(
-        child: Scaffold(
-          backgroundColor: mobileBackgroundColor,
-          appBar: AppBar(
-            centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            elevation: 0,
-            toolbarHeight: MediaQuery.of(context).size.height * 0.08,
-            title: Text(widget.groupName),
-            backgroundColor: lightPurple,
-            actions: [
-              if (FirebaseAuth.instance.currentUser!.uid ==
-                      groupData['owner'] &&
-                  postData['open'] == true)
-                IconButton(
-                  onPressed: () async {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: const Text('ปิดกิจกกรม'),
-                              content: const Text(
-                                  'คุณแน่ใจหรือไม่ว่าต้องการปิดกิจกรรมถาวร?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: (() async {
-                                    FirebaseFirestore.instance
-                                        .collection('post')
-                                        .doc(widget.groupId)
-                                        .update({'open': false}).whenComplete(
-                                            () {
-                                      Navigator.pop(context);
-                                    });
-                                    await service.showNotificationWithPayload(
-                                        id: 0,
-                                        title: widget.groupName,
-                                        body:
-                                            'กิจกรรมจบแล้วอย่าลืมไปรีวิวเพื่อนๆนะ',
-                                        payload: 'payload navigation');
-                                  }),
-                                  child: const Text(
-                                    'ตกลง',
-                                    style: TextStyle(color: redColor),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('ย้อนกลับ',
-                                      style: TextStyle(color: unselected)),
-                                ),
-                              ],
-                            ));
-                  },
-                  icon: const Icon(Icons.logout),
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : MaterialApp(
+            home: DismissKeyboard(
+              child: Scaffold(
+                backgroundColor: mobileBackgroundColor,
+                appBar: AppBar(
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  elevation: 0,
+                  toolbarHeight: MediaQuery.of(context).size.height * 0.08,
+                  title: Text(widget.groupName),
+                  backgroundColor: lightPurple,
+                  actions: [
+                    if (FirebaseAuth.instance.currentUser!.uid ==
+                            groupData['owner'] &&
+                        postData['open'] == true)
+                      IconButton(
+                        onPressed: () async {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: const Text('ปิดกิจกกรม'),
+                                    content: const Text(
+                                        'คุณแน่ใจหรือไม่ว่าต้องการปิดกิจกรรมถาวร?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: (() async {
+                                          FirebaseFirestore.instance
+                                              .collection('post')
+                                              .doc(widget.groupId)
+                                              .update({
+                                            'open': false
+                                          }).whenComplete(() {
+                                            Navigator.pop(context);
+                                          });
+                                          await service.showNotificationWithPayload(
+                                              id: 0,
+                                              title: widget.groupName,
+                                              body:
+                                                  'กิจกรรมจบแล้วอย่าลืมไปรีวิวเพื่อนๆนะ',
+                                              payload: 'payload navigation');
+                                        }),
+                                        child: const Text(
+                                          'ตกลง',
+                                          style: TextStyle(color: redColor),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('ย้อนกลับ',
+                                            style:
+                                                TextStyle(color: unselected)),
+                                      ),
+                                    ],
+                                  ));
+                        },
+                        icon: const Icon(Icons.logout),
+                      ),
+                    IconButton(
+                        onPressed: () {
+                          nextScreen(
+                              context,
+                              GroupInfo(
+                                groupId: widget.groupId,
+                                groupName: widget.groupName,
+                                groupMember: member,
+                              ));
+                        },
+                        icon: const Icon(Icons.people)),
+                  ],
                 ),
-              IconButton(
-                  onPressed: () {
-                    nextScreen(
-                        context,
-                        GroupInfo(
-                          groupId: widget.groupId,
-                          groupName: widget.groupName,
-                          groupMember: member,
-                        ));
-                  },
-                  icon: const Icon(Icons.people)),
-            ],
-          ),
-          body: SafeArea(
-            child: Stack(
-              children: <Widget>[
-                chatMessages(),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  width: MediaQuery.of(context).size.width,
-                  child: Container(
-                    height: replyMessage != ''
-                        ? MediaQuery.of(context).size.height * 0.135
-                        : MediaQuery.of(context).size.height * 0.075,
-                    color: white,
-                    child: Form(
-                      child: Column(
-                        children: [
-                          if (replyMessage != '') buildReply(),
-                          Row(children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.01,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: ((builder) => bottomSheet()),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.attach_file_outlined,
-                                color: purple,
-                                size: 30,
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.78,
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    focusNode: focusNode,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 3,
-                                    minLines: 1,
-                                    controller: messageController,
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 2, horizontal: 10),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15)),
-                                        borderSide: BorderSide(
-                                            width: 2, color: unselected),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20)),
-                                        borderSide: BorderSide(
-                                            width: 2, color: unselected),
-                                      ),
-                                      hintText: 'Send a message...',
-                                      hintStyle: TextStyle(
-                                        color: unselected,
-                                        fontFamily: 'MyCustomFont',
-                                      ),
+                body: SafeArea(
+                  child: Stack(
+                    children: <Widget>[
+                      chatMessages(),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        width: MediaQuery.of(context).size.width,
+                        child: Container(
+                          height: replyMessage != ''
+                              ? MediaQuery.of(context).size.height * 0.135
+                              : MediaQuery.of(context).size.height * 0.075,
+                          color: white,
+                          child: Form(
+                            child: Column(
+                              children: [
+                                if (replyMessage != '') buildReply(),
+                                Row(children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.01,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: ((builder) => bottomSheet()),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.attach_file_outlined,
+                                      color: purple,
+                                      size: 30,
                                     ),
                                   ),
-                                ],
-                              ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.78,
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                          focusNode: focusNode,
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 3,
+                                          minLines: 1,
+                                          controller: messageController,
+                                          decoration: const InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 2,
+                                                    horizontal: 10),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(15)),
+                                              borderSide: BorderSide(
+                                                  width: 2, color: unselected),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20)),
+                                              borderSide: BorderSide(
+                                                  width: 2, color: unselected),
+                                            ),
+                                            hintText: 'Send a message...',
+                                            hintStyle: TextStyle(
+                                              color: unselected,
+                                              fontFamily: 'MyCustomFont',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      sendMessage();
+                                    },
+                                    child: const SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: Center(
+                                          child: Icon(
+                                        Icons.send_outlined,
+                                        size: 30,
+                                        color: purple,
+                                      )),
+                                    ),
+                                  )
+                                ]),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                sendMessage();
-                              },
-                              child: const SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: Center(
-                                    child: Icon(
-                                  Icons.send_outlined,
-                                  size: 30,
-                                  color: purple,
-                                )),
-                              ),
-                            )
-                          ]),
-                        ],
-                      ),
-                    ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   chatMessages() {
