@@ -221,9 +221,8 @@ class _PostCardState extends State<CardWidget> {
                             ),
                           ),
                           FirebaseAuth.instance.currentUser!.uid ==
-                                      widget.snap['uid'] &&
-                                  widget.snap['open'] == true
-                              ? waitingLen != 0
+                                  widget.snap['uid']
+                              ? waitingLen != 0 && widget.snap['open'] == true
                                   ? const TextSpan(
                                       text: '\t\tNew Request',
                                       style: TextStyle(
