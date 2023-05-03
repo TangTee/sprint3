@@ -182,8 +182,8 @@ class _RegistrationScreen extends State<RegisterPage> {
                                         onTap: _toggleObscured,
                                         child: Icon(
                                           _obscured
-                                              ? Icons.visibility_rounded
-                                              : Icons.visibility_off_rounded,
+                                              ? Icons.visibility_off_rounded
+                                              : Icons.visibility_rounded,
                                           size: 24,
                                         ),
                                       ),
@@ -224,8 +224,8 @@ class _RegistrationScreen extends State<RegisterPage> {
                                         onTap: _toggleObscured1,
                                         child: Icon(
                                           _obscured
-                                              ? Icons.visibility_rounded
-                                              : Icons.visibility_off_rounded,
+                                              ? Icons.visibility_off_rounded
+                                              : Icons.visibility_rounded,
                                           size: 24,
                                         ),
                                       ),

@@ -102,9 +102,12 @@ class _PostCardState extends State<CardWidget> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _post =
       FirebaseFirestore.instance.collection('post');
+  final CollectionReference _join =
+      FirebaseFirestore.instance.collection('join');
 
   Future<void> post_delete(String postid) async {
     await _post.doc(postid).delete();
+    _join.doc(postid).delete();
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('You have successfully deleted a post activity')));
