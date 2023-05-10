@@ -981,18 +981,12 @@ class _MyCommentState extends State<Comment> {
                                   key: _formKey,
                                   child: Row(
                                     children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.attach_file_outlined,
-                                          color: purple,
-                                          size: 30,
-                                        ),
-                                      ),
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0)),
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.74,
+                                                0.795,
                                         child: TextFormField(
                                           keyboardType: TextInputType.multiline,
                                           maxLines: 5,
@@ -1075,7 +1069,9 @@ class _MyCommentState extends State<Comment> {
                                           size: 30,
                                           color: purple,
                                         ),
-                                      )
+                                      ),
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0)),
                                     ],
                                   ),
                                 ),
